@@ -1,0 +1,11 @@
+<script>
+    document.getElementById('installHandlerButton').addEventListener('click', async function () {
+        try {
+            await credentialHandlerPolyfill.loadOnce();
+            await WebCredentialHandler.installHandler();
+            console.log('Handler Installed Successfully!');
+        } catch (error) {
+            console.error('Error installing handler: ' + error.message);
+        }
+    });
+</script>

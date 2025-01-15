@@ -1,0 +1,79 @@
+{% extends('layouts/base.min.jinja') %}
+{% block page %}
+
+<div class="container">
+    {% include('components/brand-header.jinja') %}
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-vcenter table-mobile-md card-table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Identifier</th>
+                            <th>State</th>
+                            <th class="w-1"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for issuer in issuers %}
+                        <tr>
+                            <td data-label="Name">
+                                <div class="d-flex py-1 align-items-center">
+                                    {# <span class="avatar me-2"
+                                        style="background-image: url(./static/avatars/010m.jpg)"></span> #}
+                                    <div class="flex-fill">
+                                        <div class="font-weight-medium">{{ issuer['name'] }}</div>
+                                        {# <div class="text-secondary"><a href="#"
+                                                class="text-reset"></a></div> #}
+                                    </div>
+                                </div>
+                            </td>
+                            <td data-label="Identifier">
+                                <div>{{ issuer['id'].split(':')[-2] }}</div>
+                                <div class="text-secondary">{{ issuer['id'].split(':')[-1] }}</div>
+                            </td>
+                            <td class="text-secondary" data-label="Role">
+                                <span class="badge badge-outline text-green">Active</span>
+                            </td>
+                            <td>
+                                <div class="btn-list flex-nowrap">
+                                    {# <a href="#" class="btn">
+                                        Edit
+                                    </a> #}
+                                    <div class="dropdown">
+                                        <button class="btn dropdown-toggle align-text-top" data-bs-toggle="dropdown">
+                                            Actions
+                                        </button>
+                                        <div class="dropdown-menu dropdown-menu-end">
+                                            <a class="dropdown-item" href="#">
+                                                Issue Auth Cred
+                                            </a>
+                                            <a class="dropdown-item" href="#">
+                                                Deactivate
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="card-footer bg-transparent mt-auto">
+            <div class="btn-list justify-content-end">
+                <a href="{{ url_for('auth.logout') }}" class="btn">
+                    Exit
+                </a>
+                <a href="#" class="btn btn-primary">
+                    Submit
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

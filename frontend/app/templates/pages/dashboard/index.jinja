@@ -1,0 +1,35 @@
+{% extends('layouts/base.min.jinja') %}
+{% block page %}
+<script src="{{url_for('static', filename='js/polyfill.js')}}"></script>
+<script src="{{url_for('static', filename='js/credential-handler.js')}}"></script>
+<script>
+    const MEDIATOR = 'https://authn.io/mediator' + '?origin=' +
+    encodeURIComponent(window.location.origin);
+</script>
+<div class="container-tight">
+    {% include('components/brand-header.jinja') %}
+    <div class="card">
+        <div class="card-body">
+            <div class="row align-items-center">
+                <div class="col-4">
+                    <img src="{{ qrcode(exchange_url, error_correction='H', border=1) }}"
+                        alt="BC DID Auth Request" class="rounded">
+                </div>
+                <div class="col">
+                    <h3 class="card-title mb-1">
+                        <div class="text-reset">LoB Dashboard</div>
+                    </h3>
+                    <div class="text-secondary">
+                        Manage Orgbook Credentials
+                    </div>
+                    <div class="mt-3">
+                        <button id="installHandlerButton" class="btn btn-sm btn-outline-dark w-100 mb-1">Enable CHAPI</button>
+                        <a href="{{ url_for('dashboard.credentials_management') }}" class="btn btn-sm btn-outline-dark w-100 mb-1">Sign In</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% include('components/chapi/installer.jinja') %}
+{% endblock %}

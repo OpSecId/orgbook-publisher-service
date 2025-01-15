@@ -1,0 +1,30 @@
+{% extends('layouts/base.min.jinja') %}
+{% block page %}
+<div class="container container-normal py-4">
+    <div class="row align-items-center g-4">
+        <div class="col-lg">
+            <div class="container-tight">
+                {% include('components/brand-header.jinja') %}
+                <div class="card card-md">
+                    <div class="card-body">
+                        <h2 class="h2 text-center mb-4">Orgbook Publisher</h2>
+                        <div class="mb-2">
+                            <a id="requestAdminButton" class="btn btn-primary w-100">Administrative Tasks</a>
+                        </div>
+                        <div class="mb-2">
+                            <button onclick="" class="btn btn-primary w-100">Line of Business Dashboard</button>
+                        </div>
+                        <div class="mb-2">
+                            <a href="{{ url_for('main.dia_issuance_dbc') }}" class="btn btn-primary w-100">BC Verified</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg d-none d-lg-block">
+            <img src="{{url_for('static', filename='img/tabler/ai.png')}}" height="36" alt="">
+        </div>
+    </div>
+</div>
+{# {% include('pages/auth/verify_admin.jinja') %} #}
+{% endblock %}

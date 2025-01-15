@@ -1,0 +1,16 @@
+{
+  "name": "BC Orgbook Publisher Service",
+  "short_name": "BC-OPS",
+  "scope": "https://pydentity.net",
+  "credential_handler": {
+    "url": "/wallet/handler",
+    "enabledTypes": ["VerifiablePresentation"]
+  },
+  "icons": [
+    {
+      "src": "static/img/bcgov-logo.png",
+      "sizes": "48x48 64x64",
+      "type": "image/png"
+    }
+  ]
+}

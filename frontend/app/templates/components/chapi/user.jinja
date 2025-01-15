@@ -1,0 +1,196 @@
+<script>
+/*!
+ * Copyright (c) 2020-2022 Digital Bazaar, Inc. All rights reserved.
+ */
+'use strict'
+
+/**
+ * UI Management
+ */
+
+function pollLogin() {
+  console.log('Start polling...');
+  const startTime = Date.now();
+  const pollingInterval = 2000;
+  const maxPollingDuration = 300000;
+  console.log('Sending request');
+  $.post("{{session['endpoint']}}/wallet/login",
+    {},
+    function (data, status) {
+      if (status === 'success') {
+        console.log('Login success.');
+        saveCurrentUser(data.client_id);
+        refreshUserArea();
+        return;
+      }
+
+      const elapsedTime = Date.now() - startTime;
+      if (elapsedTime < maxPollingDuration) {
+        console.log('Login failed, retrying...');
+        setTimeout(pollLogin, pollingInterval);
+      } else {
+        console.log('Login expired.');
+      }
+    }).catch(function (error) {
+      console.log('Login failed, retrying...');
+      const elapsedTime = Date.now() - startTime;
+      if (elapsedTime < maxPollingDuration) {
+          setTimeout(pollLogin, pollingInterval);
+      } else {
+          console.log('Login expired.');
+      }
+      });
+}
+
+function login() {
+  $.post("{{session['endpoint']}}/wallet/login",
+    {},
+    function (data, status) {
+      console.log(status);
+      if (status === 'success') {
+        console.log(data.client_id);
+        saveCurrentUser(data.client_id);
+        refreshUserArea();
+      } else {
+        throw new Error('Login failed.');
+      }
+    });
+}
+
+function logout() {
+  $.post("{{session['endpoint']}}/wallet/logout",
+    {},
+    function (data, status) {
+    });
+  resetCurrentUser();
+  clearWalletDisplay();
+  clearWalletStorage();
+  refreshUserArea();
+}
+
+function refreshUserArea({shareButton} = {}) {
+  const currentUser = loadCurrentUser();
+
+  if(currentUser) {
+    document.getElementById('logged-in').classList.remove('hide');
+    document.getElementById('logged-out').classList.add('hide');
+  } else {
+    // not logged in
+    document.getElementById('logged-in').classList.add('hide');
+    document.getElementById('logged-out').classList.remove('hide');
+  }
+
+  // Refresh the user's list of wallet contents
+  clearWalletDisplay();
+}
+
+/**
+ * Wallet Storage / Persistence
+ */
+
+function loadPresentationResponse(vpr) {
+  console.log(vpr);
+  $.post("{{session['endpoint']}}/wallet/credentials",
+    {
+        client_id: localStorage.getItem('walletUsername'),
+        payload: JSON.stringify(vpr),
+    },
+    function (data, status) {
+      console.log(data);
+      if(!data) {
+        return null;
+      }
+      return data;
+  });
+}
+
+function loadWalletContents() {
+  return null;
+}
+
+function clearWalletStorage() {
+  localStorage.removeItem('walletContents');
+}
+
+function storeInWallet(verifiablePresentation) {
+  $.post("{{session['endpoint']}}/wallet/store",
+      {
+          client_id: localStorage.getItem('walletUsername'),
+          payload: JSON.stringify(verifiablePresentation),
+      },
+      () => {console.log('Storing Credential')});
+}
+
+function clearWalletDisplay() {
+  const contents = document.getElementById('walletContents');
+  while(contents.firstChild)
+    contents.removeChild(contents.firstChild);
+}
+
+function addToWalletDisplay({text, vc, button}) {
+  const li = document.createElement('li');
+
+  if(button) {
+    const buttonNode = document.createElement('a');
+    buttonNode.classList.add('waves-effect', 'waves-light', 'btn-small');
+    buttonNode.setAttribute('id', vc.id);
+    buttonNode.appendChild(document.createTextNode(button.text));
+    li.appendChild(buttonNode);
+  }
+
+  li.appendChild(document.createTextNode(' ' + text));
+
+  document.getElementById('walletContents')
+    .appendChild(li);
+
+  if(button) {
+    document.getElementById(vc.id).addEventListener('click', () => {
+      const vp = {
+        "@context": [
+          "https://www.w3.org/2018/credentials/v1",
+          "https://www.w3.org/2018/credentials/examples/v1"
+        ],
+        "type": "VerifiablePresentation",
+        "verifiableCredential": vc
+      }
+      console.log('wrapping and returning vc:', vp);
+      button.sourceEvent
+        .respondWith(Promise.resolve({dataType: 'VerifiablePresentation', data: vp}));
+    });
+  }
+}
+
+function getCredentialId(vp) {
+  const vc = Array.isArray(vp.verifiableCredential)
+    ? vp.verifiableCredential[0]
+    : vp.verifiableCredential;
+  return vc.id;
+}
+
+function getCredentialType(vc) {
+  if(!vc) {
+    return 'Credential'
+  };
+  const types = Array.isArray(vc.type) ? vc.type : [vc.type];
+  return types.length > 1 ? types.slice(1).join('/') : types[0];
+}
+
+/**
+ * User Storage / Persistence
+ */
+
+function loadCurrentUser() {
+  return localStorage.getItem('walletUsername') || '';
+}
+
+function saveCurrentUser(name) {
+  console.log('Setting login in localStorage.');
+  localStorage.setItem('walletUsername', name);
+}
+
+function resetCurrentUser() {
+  console.log('Clearing login localStorage.');
+  localStorage.removeItem('walletUsername');
+}
+
+</script>

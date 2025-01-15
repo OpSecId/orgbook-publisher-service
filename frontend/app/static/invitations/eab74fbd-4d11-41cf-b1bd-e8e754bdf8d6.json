@@ -1,0 +1,61 @@
+{
+  "state": "initial",
+  "trace": false,
+  "invi_msg_id": "91d97d12-8edb-4773-858a-a35129ca8ea0",
+  "oob_id": "cb68506a-3246-4ece-b502-7c3ed1d6e35e",
+  "invitation": {
+    "@type": "https://didcomm.org/out-of-band/1.1/invitation",
+    "@id": "91d97d12-8edb-4773-858a-a35129ca8ea0",
+    "label": "Orgbook Publisher Service",
+    "imageUrl": "https://github.com/OpSecId/orgbook-publisher/blob/main/assets/icon.png?raw=true",
+    "handshake_protocols": [],
+    "accept": [
+      "didcomm/aip1",
+      "didcomm/aip2;env=rfc19"
+    ],
+    "requests~attach": [
+      {
+        "@id": "request-0",
+        "mime-type": "application/json",
+        "data": {
+          "json": {
+            "@type": "https://didcomm.org/present-proof/2.0/request-presentation",
+            "@id": "f645712e-f15e-4e5c-8347-dafda9b847f7",
+            "~thread": {
+              "pthid": "91d97d12-8edb-4773-858a-a35129ca8ea0"
+            },
+            "will_confirm": true,
+            "formats": [
+              {
+                "attach_id": "indy",
+                "format": "hlindy/proof-req@v2.0"
+              }
+            ],
+            "request_presentations~attach": [
+              {
+                "@id": "indy",
+                "mime-type": "application/json",
+                "data": {
+                  "base64": "eyJuYW1lIjogIk9yZ2Jvb2sgcmVnaXN0cmF0aW9uIElEIHByb29mIHJlcXVlc3QiLCAidmVyc2lvbiI6ICIxLjAiLCAibm9uY2UiOiAiMzU4OTcwNzUiLCAicmVxdWVzdGVkX2F0dHJpYnV0ZXMiOiB7InJlZ2lzdHJhdGlvbklkIjogeyJuYW1lcyI6IFsicmVnaXN0cmF0aW9uSWQiLCAiZW50aXR5SWQiXSwgInJlc3RyaWN0aW9ucyI6IFt7Imlzc3Vlcl9kaWQiOiAiTW8yVDc2WktjUXZkWU5QZGdHYk1GaSIsICJzY2hlbWFfaWQiOiAiTW8yVDc2WktjUXZkWU5QZGdHYk1GaToyOk9yZ2Jvb2sgUmVnaXN0cmF0aW9uIFJlY29yZDowLjEifV19fSwgInJlcXVlc3RlZF9wcmVkaWNhdGVzIjoge319"
+                }
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "services": [
+      {
+        "id": "#inline",
+        "type": "did-communication",
+        "recipientKeys": [
+          "did:key:z6MkidXmBKbyCQfysC9FBThMtTSfU64Ywn7ZgNKSzUqFSHMc#z6MkidXmBKbyCQfysC9FBThMtTSfU64Ywn7ZgNKSzUqFSHMc"
+        ],
+        "serviceEndpoint": "https://traction-acapy-dev.apps.silver.devops.gov.bc.ca"
+      }
+    ],
+    "goal_code": "request-vp",
+    "goal": "To request an Orgbook registration ID."
+  },
+  "invitation_url": "https://traction-acapy-dev.apps.silver.devops.gov.bc.ca?oob=eyJAdHlwZSI6ICJodHRwczovL2RpZGNvbW0ub3JnL291dC1vZi1iYW5kLzEuMS9pbnZpdGF0aW9uIiwgIkBpZCI6ICI5MWQ5N2QxMi04ZWRiLTQ3NzMtODU4YS1hMzUxMjljYThlYTAiLCAibGFiZWwiOiAiT3JnYm9vayBQdWJsaXNoZXIgU2VydmljZSIsICJpbWFnZVVybCI6ICJodHRwczovL2dpdGh1Yi5jb20vT3BTZWNJZC9vcmdib29rLXB1Ymxpc2hlci9ibG9iL21haW4vYXNzZXRzL2ljb24ucG5nP3Jhdz10cnVlIiwgImhhbmRzaGFrZV9wcm90b2NvbHMiOiBbXSwgImFjY2VwdCI6IFsiZGlkY29tbS9haXAxIiwgImRpZGNvbW0vYWlwMjtlbnY9cmZjMTkiXSwgInJlcXVlc3RzfmF0dGFjaCI6IFt7IkBpZCI6ICJyZXF1ZXN0LTAiLCAibWltZS10eXBlIjogImFwcGxpY2F0aW9uL2pzb24iLCAiZGF0YSI6IHsianNvbiI6IHsiQHR5cGUiOiAiaHR0cHM6Ly9kaWRjb21tLm9yZy9wcmVzZW50LXByb29mLzIuMC9yZXF1ZXN0LXByZXNlbnRhdGlvbiIsICJAaWQiOiAiZjY0NTcxMmUtZjE1ZS00ZTVjLTgzNDctZGFmZGE5Yjg0N2Y3IiwgIn50aHJlYWQiOiB7InB0aGlkIjogIjkxZDk3ZDEyLThlZGItNDc3My04NThhLWEzNTEyOWNhOGVhMCJ9LCAid2lsbF9jb25maXJtIjogdHJ1ZSwgImZvcm1hdHMiOiBbeyJhdHRhY2hfaWQiOiAiaW5keSIsICJmb3JtYXQiOiAiaGxpbmR5L3Byb29mLXJlcUB2Mi4wIn1dLCAicmVxdWVzdF9wcmVzZW50YXRpb25zfmF0dGFjaCI6IFt7IkBpZCI6ICJpbmR5IiwgIm1pbWUtdHlwZSI6ICJhcHBsaWNhdGlvbi9qc29uIiwgImRhdGEiOiB7ImJhc2U2NCI6ICJleUp1WVcxbElqb2dJazl5WjJKdmIyc2djbVZuYVhOMGNtRjBhVzl1SUVsRUlIQnliMjltSUhKbGNYVmxjM1FpTENBaWRtVnljMmx2YmlJNklDSXhMakFpTENBaWJtOXVZMlVpT2lBaU16VTRPVGN3TnpVaUxDQWljbVZ4ZFdWemRHVmtYMkYwZEhKcFluVjBaWE1pT2lCN0luSmxaMmx6ZEhKaGRHbHZia2xrSWpvZ2V5SnVZVzFsY3lJNklGc2ljbVZuYVhOMGNtRjBhVzl1U1dRaUxDQWlaVzUwYVhSNVNXUWlYU3dnSW5KbGMzUnlhV04wYVc5dWN5STZJRnQ3SW1semMzVmxjbDlrYVdRaU9pQWlUVzh5VkRjMldrdGpVWFprV1U1UVpHZEhZazFHYVNJc0lDSnpZMmhsYldGZmFXUWlPaUFpVFc4eVZEYzJXa3RqVVhaa1dVNVFaR2RIWWsxR2FUb3lPazl5WjJKdmIyc2dVbVZuYVhOMGNtRjBhVzl1SUZKbFkyOXlaRG93TGpFaWZWMTlmU3dnSW5KbGNYVmxjM1JsWkY5d2NtVmthV05oZEdWeklqb2dlMzE5In19XX19fV0sICJzZXJ2aWNlcyI6IFt7ImlkIjogIiNpbmxpbmUiLCAidHlwZSI6ICJkaWQtY29tbXVuaWNhdGlvbiIsICJyZWNpcGllbnRLZXlzIjogWyJkaWQ6a2V5Ono2TWtpZFhtQktieUNRZnlzQzlGQlRoTXRUU2ZVNjRZd243WmdOS1N6VXFGU0hNYyN6Nk1raWRYbUJLYnlDUWZ5c0M5RkJUaE10VFNmVTY0WXduN1pnTktTelVxRlNITWMiXSwgInNlcnZpY2VFbmRwb2ludCI6ICJodHRwczovL3RyYWN0aW9uLWFjYXB5LWRldi5hcHBzLnNpbHZlci5kZXZvcHMuZ292LmJjLmNhIn1dLCAiZ29hbF9jb2RlIjogInJlcXVlc3QtdnAiLCAiZ29hbCI6ICJUbyByZXF1ZXN0IGFuIE9yZ2Jvb2sgcmVnaXN0cmF0aW9uIElELiJ9"
+}

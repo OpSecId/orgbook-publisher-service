@@ -1,0 +1,59 @@
+<script>
+    async function onClickRequestAdmin() {
+        // create Verifiable Presentation Request
+        const testVpr = {
+            query: [{{ lob_query }}]
+        };
+
+        // fake VC API url
+        let vcapiUrl;
+        {
+            const searchParams = new URLSearchParams();
+            searchParams.set('fakevpr', JSON.stringify(testVpr));
+            vcapiUrl = 'https://vcapi.example/exchangers/z123/exchanges/z456?' +
+                searchParams;
+        }
+        console.log('vcapiUrl', vcapiUrl);
+
+        // create Credential Interface Query
+        const credentialInterfaceQuery = {
+            web: {
+                VerifiablePresentation: testVpr,
+                /*recommendedHandlerOrigins: [
+                  "https://wallet.example.chapi.io/"
+                ],*/
+                protocols: {
+                    vcapi: vcapiUrl
+                }
+            }
+        };
+
+        console.log('Requesting credential...');
+        {# document.getElementById('getResults').innerText = 'Requesting credential...'; #}
+
+        const result = await navigator.credentials.get(credentialInterfaceQuery);
+
+        {# document.getElementById('resultsPanel').classList.remove('hide'); #}
+        {# document.getElementById('getResults').innerText = JSON.stringify(result, null, 2); #}
+
+        console.log('Result of get() request:', JSON.stringify(result, null, 2));
+    }
+
+    function ready(fn) {
+        if (document.readyState !== 'loading') {
+            fn();
+        } else {
+            document.addEventListener('DOMContentLoaded', fn);
+        }
+    }
+
+    ready(() => {
+        document.getElementById('requestAdminButton').addEventListener('click', onClickRequestAdmin);
+        console.log('Document ready.')
+    })
+
+    credentialHandlerPolyfill
+        .loadOnce(MEDIATOR)
+        .then(console.log('Polyfill loaded.'))
+        .catch(e => console.error('Error loading polyfill:', e));
+</script>

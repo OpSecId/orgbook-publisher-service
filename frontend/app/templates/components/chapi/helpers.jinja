@@ -1,0 +1,19 @@
+<script>
+    /*!
+     * Copyright (c) 2020-2022 Digital Bazaar, Inc. All rights reserved.
+     */
+    'use strict'
+
+    /**
+     * Simple config file (to help test against local instances of authn.io, local
+     * wallets, etc).
+     */
+
+    function onDocumentReady(fn) {
+        if (document.readyState !== 'loading') {
+            fn();
+        } else {
+            document.addEventListener('DOMContentLoaded', fn);
+        }
+    }
+</script>
