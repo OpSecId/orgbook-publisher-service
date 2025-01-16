@@ -33,8 +33,8 @@ class TractionController:
         settings.LOGGER.info("Fetching issuer registry.")
         issuers = httpx.get(settings.ISSUER_REGISTRY_URL).json()["issuers"]
         settings.LOGGER.info(f"Found {len(issuers)} entries in registry.")
-        # mongo = MongoClient()
-        # mongo.provision()
+        mongo = MongoClient()
+        mongo.provision()
         for issuer in issuers:
             settings.LOGGER.info(issuer["name"])
 
