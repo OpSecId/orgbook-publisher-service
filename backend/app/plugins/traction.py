@@ -31,7 +31,8 @@ class TractionController:
     async def provision(self):
         self.authorize()
         settings.LOGGER.info("Fetching issuer registry.")
-        issuers = httpx.get(settings.ISSUER_REGISTRY_URL).json()["issuers"]
+        issuers = httpx.get(settings.ISSUER_REGISTRY_URL).json()
+        issuers = issuers.get('registry') or issuers.get('issuers')
         settings.LOGGER.info(f"Found {len(issuers)} entries in registry.")
         mongo = MongoClient()
         mongo.provision()
