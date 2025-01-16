@@ -48,27 +48,27 @@ class TractionController:
             if not authorized_key:
                 settings.LOGGER.info("No wallet key found.")
 
-            settings.LOGGER.info("Looking up local issuer record.")
-            issuer_record = mongo.find_one("IssuerRecord", {"id": issuer["id"]})
-            if not issuer_record:
-                settings.LOGGER.info("No local record found.")
+            # settings.LOGGER.info("Looking up local issuer record.")
+            # issuer_record = mongo.find_one("IssuerRecord", {"id": issuer["id"]})
+            # if not issuer_record:
+            #     settings.LOGGER.info("No local record found.")
 
-            if did_document and authorized_key and issuer_record:
-                if issuer_record["authorized_key"] != authorized_key:
-                    settings.LOGGER.info("Authorized key mismatch.")
-                else:
-                    settings.LOGGER.info("All records check OK!")
+            # if did_document and authorized_key and issuer_record:
+            #     if issuer_record["authorized_key"] != authorized_key:
+            #         settings.LOGGER.info("Authorized key mismatch.")
+            #     else:
+            #         settings.LOGGER.info("All records check OK!")
                     
-            elif did_document and authorized_key and not issuer_record:
-                issuer_record = IssuerRecord(
-                    id=issuer.get("id"),
-                    name=issuer.get("name"),
-                    authorized_key=authorized_key,
-                ).model_dump()
-                mongo.insert("IssuerRecord", issuer_record)
-                settings.LOGGER.info("Local issuer record created.")
-            else:
-                settings.LOGGER.info("Admin action required.")
+            # elif did_document and authorized_key and not issuer_record:
+            #     issuer_record = IssuerRecord(
+            #         id=issuer.get("id"),
+            #         name=issuer.get("name"),
+            #         authorized_key=authorized_key,
+            #     ).model_dump()
+            #     mongo.insert("IssuerRecord", issuer_record)
+            #     settings.LOGGER.info("Local issuer record created.")
+            # else:
+            #     settings.LOGGER.info("Admin action required.")
 
     def authorize(self):
         r = requests.post(

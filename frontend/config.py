@@ -12,10 +12,7 @@ class Config(object):
     PUBLISHER_DOMAIN = os.getenv("DOMAIN", "localhost:5000")
     PUBLISHER_ENDPOINT = f"https://{PUBLISHER_DOMAIN}"
 
-    ORGBOOK_ENDPOINT = "https://dev.orgbook.gov.bc.ca"
-
-    PUBLISHER_SERVER = os.getenv("PUBLISHER_SERVER", None)
-    PUBLISHER_API_KEY = os.getenv("PUBLISHER_API_KEY", "unsecured")
+    ORGBOOK_ENDPOINT = os.getenv("ORGBOOK_URL")
 
     # PUBLISHER_NAME = 'Orgbook Publisher Service'
     # PUBLISHER_LOGO = 'https://avatars.githubusercontent.com/u/151191942'
@@ -26,6 +23,9 @@ class Config(object):
     TRACTION_API_URL = os.getenv("TRACTION_API_URL")
     TRACTION_API_KEY = os.getenv("TRACTION_API_KEY")
     TRACTION_TENANT_ID = os.getenv("TRACTION_TENANT_ID")
+    
+    PUBLISHER_SERVER = os.getenv("PUBLISHER_SERVER", None)
+    PUBLISHER_API_KEY = TRACTION_API_KEY
 
     # SESSION_TYPE = 'redis'
     # SESSION_REDIS = redis.from_url(os.getenv('REDIS_URL'))
