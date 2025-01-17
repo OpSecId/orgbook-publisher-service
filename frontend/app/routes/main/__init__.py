@@ -54,6 +54,7 @@ def dia_issuance_dbc():
     if request.method == "POST":
         pres_ex = traction.check_pres_ex(session['pres_ex_id'])
         current_app.logger.debug(pres_ex)
+        current_app.logger.debug(pres_ex.get('verified'))
         if pres_ex.get('verified'):
             values = pres_ex['requested_proof']['revealed_attr_groups']['registrationId']['values']
             session["entityId"] = values['entityId']['raw']
