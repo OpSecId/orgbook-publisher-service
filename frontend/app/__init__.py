@@ -4,7 +4,7 @@ from flask_qrcode import QRcode
 # from flask_session import Session
 
 from config import Config
-    import logging
+import logging
 
 from app.routes.errors import bp as errors_bp
 from app.routes.auth import bp as auth_bp
