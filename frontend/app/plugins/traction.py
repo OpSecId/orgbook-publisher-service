@@ -86,8 +86,8 @@ class TractionController:
         return r.json()
         
     def check_pres_ex(self, pres_ex_id):
-        endpoint = f'{self.endpoint}/present-proof-2.0/records/{pres_ex_id}'
-        r = requests.get(
+        endpoint = f'{self.endpoint}/present-proof-2.0/records/{pres_ex_id}/verify-presentation'
+        r = requests.post(
             endpoint,
             headers=self.headers
         )
