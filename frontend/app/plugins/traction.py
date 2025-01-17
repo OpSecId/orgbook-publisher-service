@@ -85,13 +85,13 @@ class TractionController:
         )
         return r.json()
         
-    def check_pres_req(self, pres_ex_id):
+    def check_pres_ex(self, pres_ex_id):
         endpoint = f'{self.endpoint}/present-proof-2.0/records/{pres_ex_id}'
         r = requests.get(
             endpoint,
             headers=self.headers
         )
-        return r.json()['verified']
+        return r.json()
         
     def remove_pres_req(self, pres_ex_id):
         endpoint = f'{self.endpoint}/present-proof-2.0/records/{pres_ex_id}'

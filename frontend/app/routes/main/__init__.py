@@ -36,22 +36,27 @@ def dia_issuance_dbc():
     page_title = "BC Verified"
     traction = TractionController()
     pres_req = traction.create_pres_req()
-    pres_req_id = pres_req.get('pres_ex_id')
+    pres_ex_id = pres_req.get('pres_ex_id')
     invitation = traction.create_oob_inv(
         attachement={
-            "id": pres_req_id,
+            "id": pres_ex_id,
             "type": "present-proof"
         },
         handshake=False
     )
     invitation_payload = invitation['invitation_url'].split('?')[-1]
     invitation_url = f'https://didcomm.link/?{invitation_payload}'
-    with open(f'app/static/invitations/{pres_req_id}.json', 'w') as f:
+    with open(f'app/static/invitations/{pres_ex_id}.json', 'w') as f:
         f.write(json.dumps(invitation, indent=2))
-    invitation_short_url = f'didcomm://{Config.PUBLISHER_DOMAIN}' + url_for('wallet.fetch_invitation', exchange_id=pres_req_id)
+    invitation_short_url = f'didcomm://{Config.PUBLISHER_DOMAIN}' + url_for('wallet.fetch_invitation', exchange_id=pres_ex_id)
     # oob_invitation_url = Config.PUBLISHER_ENDPOINT + oob_invitation_url
-    
+    # session['pres_req_id'] = pres_req_id
     if request.method == "POST":
+        pres_ex = traction.check_pres_ex(pres_ex_id)
+        print(json.dumps(pres_ex, indent=2))
+        if pres_ex.get('verified'):
+            pass
+        
         session["registrationId"] = "BC0746413"
         return redirect(url_for("main.dia_issuance_info"))
     return render_template(
