@@ -48,7 +48,7 @@ def dia_issuance_dbc():
     invitation_url = f'https://didcomm.link/?{invitation_payload}'
     with open(f'app/static/invitations/{pres_ex_id}.json', 'w') as f:
         f.write(json.dumps(invitation, indent=2))
-    invitation_short_url = f'didcomm://{Config.PUBLISHER_DOMAIN}' + url_for('wallet.fetch_invitation', exchange_id=pres_ex_id)
+    invitation_short_url = Config.PUBLISHER_ENDPOINT + url_for('wallet.fetch_invitation', exchange_id=pres_ex_id)
     # oob_invitation_url = Config.PUBLISHER_ENDPOINT + oob_invitation_url
     # session['pres_req_id'] = pres_req_id
     if request.method == "POST":
