@@ -4,6 +4,7 @@ from flask_qrcode import QRcode
 # from flask_session import Session
 
 from config import Config
+    import logging
 
 from app.routes.errors import bp as errors_bp
 from app.routes.auth import bp as auth_bp
@@ -17,8 +18,10 @@ import json
 
 
 def create_app(config_class=Config):
+    logging.basicConfig(level=logging.DEBUG)
     app = Flask(__name__)
     app.config.from_object(config_class)
+
 
     @app.route("/manifest.webmanifest")
     @app.route("/manifest.json")

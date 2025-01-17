@@ -49,11 +49,9 @@ def dia_issuance_dbc():
     with open(f'app/static/invitations/{pres_ex_id}.json', 'w') as f:
         f.write(json.dumps(invitation, indent=2))
     invitation_short_url = Config.PUBLISHER_ENDPOINT + url_for('wallet.fetch_invitation', exchange_id=pres_ex_id)
-    # oob_invitation_url = Config.PUBLISHER_ENDPOINT + oob_invitation_url
-    # session['pres_req_id'] = pres_req_id
     if request.method == "POST":
         pres_ex = traction.check_pres_ex(pres_ex_id)
-        print(json.dumps(pres_ex, indent=2))
+        current_app.logger.debug(pres_ex)
         if pres_ex.get('verified'):
             pass
         
