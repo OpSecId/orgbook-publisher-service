@@ -30,10 +30,10 @@ def fetch_invitation(exchange_id: str):
     with open(f'app/static/invitations/{exchange_id}.json', 'r') as f:
         invitation = json.loads(f.read())
     # print(invitation)
-    # return invitation['invitation']
-    invitation_payload = invitation['invitation_url'].split('?')[-1]
-    redirect_url = f'https://didcomm.link/?{invitation_payload}'
-    return redirect(redirect_url)
+    return invitation['invitation']
+    # invitation_payload = invitation['invitation_url'].split('?')[-1]
+    # redirect_url = f'https://didcomm.link/?{invitation_payload}'
+    # return redirect(redirect_url)
     # except:
     #     return 404
 
