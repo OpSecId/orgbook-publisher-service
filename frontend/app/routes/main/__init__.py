@@ -55,9 +55,11 @@ def dia_issuance_dbc():
         pres_ex = traction.check_pres_ex(session['pres_ex_id'])
         current_app.logger.debug(pres_ex)
         if pres_ex.get('verified'):
-            pass
+            values = pres_ex['requested_proof']['revealed_attr_groups']['registrationId']['values']
+            session["entityId"] = values['entityId']['raw']
+            session["registrationId"] = values['registrationId']['raw']
+            current_app.logger.debug(session["registrationId"])
         
-        session["registrationId"] = "BC0746413"
         return redirect(url_for("main.dia_issuance_info"))
     return render_template(
         "pages/dia_issuance/present_dbc.jinja",
