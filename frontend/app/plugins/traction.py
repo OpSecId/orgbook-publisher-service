@@ -1,3 +1,4 @@
+from flask import current_app
 from config import Config
 import requests
 import secrets
@@ -28,7 +29,7 @@ class TractionController:
         endpoint = f'{self.endpoint}/present-proof-2.0/create-request'
         pres_req = {
             'auto_remove': False,
-            'auto_verify': True,
+            'auto_verify': False,
             'presentation_request': {
                 'indy': {
                     'name': 'Orgbook registration ID proof request',
@@ -91,6 +92,7 @@ class TractionController:
             endpoint,
             headers=self.headers
         )
+        current_app.logger.debug(r.text)
         return r.json()
         
     def remove_pres_req(self, pres_ex_id):
