@@ -37,7 +37,7 @@ def dia_issuance_dbc():
     traction = TractionController()
     if request.method == "GET":
         pres_req = traction.create_pres_req()
-        pres_ex_id = pres_req.get('pres_ex_id')
+        session['pres_ex_id'] = pres_ex_id = pres_req.get('pres_ex_id')
         invitation = traction.create_oob_inv(
             attachement={
                 "id": pres_ex_id,
@@ -52,7 +52,7 @@ def dia_issuance_dbc():
         invitation_short_url = Config.PUBLISHER_ENDPOINT + url_for('wallet.fetch_invitation', exchange_id=pres_ex_id)
 
     if request.method == "POST":
-        pres_ex = traction.check_pres_ex(pres_ex_id)
+        pres_ex = traction.check_pres_ex(session['pres_ex_id'])
         current_app.logger.debug(pres_ex)
         if pres_ex.get('verified'):
             pass
