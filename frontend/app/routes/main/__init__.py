@@ -35,20 +35,22 @@ def index():
 def dia_issuance_dbc():
     page_title = "BC Verified"
     traction = TractionController()
-    pres_req = traction.create_pres_req()
-    pres_ex_id = pres_req.get('pres_ex_id')
-    invitation = traction.create_oob_inv(
-        attachement={
-            "id": pres_ex_id,
-            "type": "present-proof"
-        },
-        handshake=False
-    )
-    invitation_payload = invitation['invitation_url'].split('?')[-1]
-    invitation_url = f'https://didcomm.link/?{invitation_payload}'
-    with open(f'app/static/invitations/{pres_ex_id}.json', 'w') as f:
-        f.write(json.dumps(invitation, indent=2))
-    invitation_short_url = Config.PUBLISHER_ENDPOINT + url_for('wallet.fetch_invitation', exchange_id=pres_ex_id)
+    if request.method == "GET":
+        pres_req = traction.create_pres_req()
+        pres_ex_id = pres_req.get('pres_ex_id')
+        invitation = traction.create_oob_inv(
+            attachement={
+                "id": pres_ex_id,
+                "type": "present-proof"
+            },
+            handshake=False
+        )
+        invitation_payload = invitation['invitation_url'].split('?')[-1]
+        invitation_url = f'https://didcomm.link/?{invitation_payload}'
+        with open(f'app/static/invitations/{pres_ex_id}.json', 'w') as f:
+            f.write(json.dumps(invitation, indent=2))
+        invitation_short_url = Config.PUBLISHER_ENDPOINT + url_for('wallet.fetch_invitation', exchange_id=pres_ex_id)
+
     if request.method == "POST":
         pres_ex = traction.check_pres_ex(pres_ex_id)
         current_app.logger.debug(pres_ex)
