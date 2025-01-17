@@ -56,7 +56,7 @@ def dia_issuance_dbc():
         current_app.logger.debug(pres_ex)
         current_app.logger.debug(pres_ex.get('verified'))
         if pres_ex.get('verified'):
-            values = pres_ex['pres']['requested_proof']['revealed_attr_groups']['registrationId']['values']
+            values = pres_ex['by_format']['pres']['indy']['requested_proof']['revealed_attr_groups']['registrationId']['values']
             session["entityId"] = values['entityId']['raw']
             session["registrationId"] = values['registrationId']['raw']
             current_app.logger.debug(session["registrationId"])
