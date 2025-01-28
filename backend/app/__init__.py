@@ -7,6 +7,7 @@ from app.routers import (
     registrations,
     credentials,
     related_resources,
+    workflows
 )
 from config import settings
 
@@ -35,6 +36,7 @@ api_router.include_router(authentication.router)
 api_router.include_router(registrations.router)
 api_router.include_router(credentials.router)
 api_router.include_router(related_resources.router)
+api_router.include_router(workflows.router)
 
 
 app.include_router(api_router)

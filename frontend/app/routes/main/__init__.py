@@ -112,9 +112,7 @@ def dia_issuance_info():
 @bp.route("/dia-issuance/did-auth", methods=["GET", "POST"])
 def dia_issuance_did_auth():
     page_title = "BC Verified"
-    exchange_url = (
-        "https://publisher.orgbook.gov.bc.ca/workflows/invitations/exchanges/123"
-    )
+    exchange_url = ''
     if request.method == "POST":
         return redirect(url_for("main.dia_issuance_dia_credential"))
     return render_template(

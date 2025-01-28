@@ -3,6 +3,7 @@ from pydantic import Field, BaseModel, field_validator
 from pydantic.json_schema import SkipJsonSchema
 from config import settings
 from app.utils import valid_datetime_string, valid_uri
+from app.models.proof import DataIntegrityProof
 
 
 class NameField(BaseModel, extra="forbid"):
@@ -153,3 +154,7 @@ class Credential(BaseModel):
             assert valid_uri(ressource.id)
             assert ressource.digestSRI or ressource.digestMultibase
         return value
+
+
+class VerifiableCredential(Credential):
+    proof: Union[DataIntegrityProof, List[DataIntegrityProof]] = Field()

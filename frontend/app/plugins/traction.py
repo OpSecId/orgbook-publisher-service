@@ -25,26 +25,23 @@ class TractionController:
             'Authorization': f'Bearer {access_token}'
         }
         
-    def create_pres_req(self):
+    def create_pres_req(self, name, issuer, schema_id, attributes):
         endpoint = f'{self.endpoint}/present-proof-2.0/create-request'
         pres_req = {
             'auto_remove': False,
             'auto_verify': True,
             'presentation_request': {
                 'indy': {
-                    'name': 'Orgbook registration ID proof request',
+                    'name': name,
                     'version': '1.0',
                     'nonce': str(randint(1, 99999999)),
                     'requested_attributes': {
-                        'registrationId': {
-                            'names': [
-                                'registrationId',
-                                'entityId'
-                            ],
+                        'requestedAttributes': {
+                            'names': attributes,
                             'restrictions':[
                                 {
-                                    'issuer_did': 'Mo2T76ZKcQvdYNPdgGbMFi',
-                                    'schema_id': 'Mo2T76ZKcQvdYNPdgGbMFi:2:Orgbook Registration Record:0.1'
+                                    'issuer_did': issuer,
+                                    'schema_id': schema_id
                                 }
                             ]
                         }
@@ -60,25 +57,30 @@ class TractionController:
         )
         return r.json()
         
-    def create_oob_inv(self, attachement=None, handshake=False):
+    def create_oob_inv(self, client_id, cred_ex_id=None, pres_ex_id=None, handshake=False):
         endpoint = f'{self.endpoint}/out-of-band/create-invitation?auto_accept=true'
         invitation = {
-            "accept": [
-                "didcomm/aip1",
-                "didcomm/aip2;env=rfc19"
-            ],
-            # "alias": "Barry",
-            # "attachments": [attachement],
-            "goal": "To request an Orgbook registration ID.",
-            "goal_code": "request-vp",
-            # "handshake_protocols": [],
+            # "accept": [
+            #     "didcomm/aip1",
+            #     "didcomm/aip2;env=rfc19"
+            # ],
             "my_label": "Orgbook Publisher Service",
+            "alias": client_id,
+            "attachments": [],
+            # "goal": "To request an Orgbook registration ID.",
+            # "goal_code": "request-vp",
+            "handshake_protocols": [],
             "protocol_version": "1.1"
         }
-        if attachement:
-            invitation['attachments'] = [attachement]
+        if pres_ex_id:
+            invitation['attachments'].append({
+                "id":   pres_ex_id,
+                "type": "present-proof"
+            })
         if handshake:
-            invitation['handshake_protocols'] = ["https://didcomm.org/didexchange/1.0"]
+            invitation['handshake_protocols'].append(
+                "https://didcomm.org/didexchange/1.0"
+            )
         r = requests.post(
             endpoint,
             headers=self.headers,

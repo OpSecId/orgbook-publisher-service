@@ -7,8 +7,8 @@
             <div class="card-body">
                 <div class="row align-items-center">
                     <div class="col-4">
-                        <a href="#" class="btn" data-bs-toggle="modal" data-bs-target="#modal-invitation-dbc">
-                            <img src="{{ qrcode(oob_invitation_short_url, error_correction='H', border=1) }}"
+                        <a href="#" class="btn">
+                            <img src="{{ qrcode(exchange_url, error_correction='H', border=1) }}"
                             alt="BC Digital Business Card Presentation Request" class="rounded">
                         </a>
                     </div>
@@ -28,5 +28,5 @@
         </div>
     </form>
 </div>
-{% include('pages/dia_issuance/invitation_modal.jinja') %}
+{# {% include('pages/dia_issuance/invitation_modal.jinja') %} #}
 {% endblock %}
