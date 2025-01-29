@@ -14,7 +14,7 @@ class TractionControllerError(Exception):
 class TractionController:
     def __init__(self):
         self.default_kid = "key-01"
-        self.publisher_multikey = settings.PUBLISHER_MULTIKEY
+        self.witness_key = settings.WITNESS_KEY
         self.endpoint = settings.TRACTION_API_URL
         self.tenant_id = settings.TRACTION_TENANT_ID
         self.api_key = settings.TRACTION_API_KEY
@@ -29,46 +29,54 @@ class TractionController:
             return None
 
     async def provision(self):
-        self.authorize()
+        # self.authorize()
         settings.LOGGER.info("Fetching issuer registry.")
-        issuers = httpx.get(settings.ISSUER_REGISTRY_URL).json()["issuers"]
+        registry = requests.get(settings.ISSUER_REGISTRY_URL).json()
+        issuers = registry.get('registry')
+        
+        if not isinstance(issuers, list):
+            issuers = registry.get('issuers')
+            
+        if not isinstance(issuers, list):
+            settings.LOGGER.info('Invalid registry response.')
+            
         settings.LOGGER.info(f"Found {len(issuers)} entries in registry.")
-        mongo = MongoClient()
-        mongo.provision()
-        for issuer in issuers:
-            settings.LOGGER.info(issuer["name"])
+        # mongo = MongoClient()
+        # mongo.provision()
+        # for issuer in issuers:
+        #     settings.LOGGER.info(issuer["name"])
 
-            settings.LOGGER.info("Resolving DID document.")
-            did_document = self.resolve(issuer.get("id"))
-            if not did_document:
-                settings.LOGGER.info("Could not resolve DID document.")
+        #     settings.LOGGER.info("Resolving DID document.")
+        #     did_document = self.resolve(issuer.get("id"))
+        #     if not did_document:
+        #         settings.LOGGER.info("Could not resolve DID document.")
 
-            settings.LOGGER.info("Looking up traction wallet.")
-            authorized_key = self.get_multikey(issuer.get("id"))
-            if not authorized_key:
-                settings.LOGGER.info("No wallet key found.")
+        #     settings.LOGGER.info("Looking up traction wallet.")
+        #     authorized_key = self.get_multikey(issuer.get("id"))
+        #     if not authorized_key:
+        #         settings.LOGGER.info("No wallet key found.")
 
-            settings.LOGGER.info("Looking up local issuer record.")
-            issuer_record = mongo.find_one("IssuerRecord", {"id": issuer["id"]})
-            if not issuer_record:
-                settings.LOGGER.info("No local record found.")
+        #     settings.LOGGER.info("Looking up local issuer record.")
+        #     issuer_record = mongo.find_one("IssuerRecord", {"id": issuer["id"]})
+        #     if not issuer_record:
+        #         settings.LOGGER.info("No local record found.")
 
-            if did_document and authorized_key and issuer_record:
-                if issuer_record["authorized_key"] != authorized_key:
-                    settings.LOGGER.info("Authorized key mismatch.")
-                else:
-                    settings.LOGGER.info("All records check OK!")
+        #     if did_document and authorized_key and issuer_record:
+        #         if issuer_record["authorized_key"] != authorized_key:
+        #             settings.LOGGER.info("Authorized key mismatch.")
+        #         else:
+        #             settings.LOGGER.info("All records check OK!")
                     
-            elif did_document and authorized_key and not issuer_record:
-                issuer_record = IssuerRecord(
-                    id=issuer.get("id"),
-                    name=issuer.get("name"),
-                    authorized_key=authorized_key,
-                ).model_dump()
-                mongo.insert("IssuerRecord", issuer_record)
-                settings.LOGGER.info("Local issuer record created.")
-            else:
-                settings.LOGGER.info("Admin action required.")
+        #     elif did_document and authorized_key and not issuer_record:
+        #         issuer_record = IssuerRecord(
+        #             id=issuer.get("id"),
+        #             name=issuer.get("name"),
+        #             authorized_key=authorized_key,
+        #         ).model_dump()
+        #         mongo.insert("IssuerRecord", issuer_record)
+        #         settings.LOGGER.info("Local issuer record created.")
+        #     else:
+        #         settings.LOGGER.info("Admin action required.")
 
     def authorize(self):
         r = requests.post(

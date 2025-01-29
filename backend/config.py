@@ -1,4 +1,5 @@
 from pydantic_settings import BaseSettings
+from typing import Union
 import os
 import logging
 from logging import Logger
@@ -17,30 +18,32 @@ class Settings(BaseSettings):
     LOGGER: Logger = logging.getLogger(__name__)
     logging.basicConfig(level=LOG_LEVEL, format=LOG_FORMAT)
 
-    DOMAIN: str = os.getenv("DOMAIN")
+    # DOMAIN: str = os.getenv("DOMAIN")
 
     TRACTION_API_URL: str = os.getenv("TRACTION_API_URL")
     TRACTION_API_KEY: str = os.getenv("TRACTION_API_KEY")
     TRACTION_TENANT_ID: str = os.getenv("TRACTION_TENANT_ID")
 
-    ORGBOOK_URL: str = os.getenv("ORGBOOK_URL")
-    ORGBOOK_API_URL: str = f"{ORGBOOK_URL}/api/v4"
-    ORGBOOK_VC_SERVICE: str = f"{ORGBOOK_URL}/api/vc"
-    ORGBOOK_SYNC: bool = os.getenv("ORGBOOK_SYNC", True)
+    # ORGBOOK_URL: str = os.getenv("ORGBOOK_URL")
+    # ORGBOOK_API_URL: str = f"{ORGBOOK_URL}/api/v4"
+    # ORGBOOK_VC_SERVICE: str = f"{ORGBOOK_URL}/api/vc"
+    # ORGBOOK_SYNC: bool = os.getenv("ORGBOOK_SYNC", True)
 
-    DID_WEB_SERVER_URL: str = os.getenv("DID_WEB_SERVER_URL")
-    PUBLISHER_MULTIKEY: str = os.getenv("PUBLISHER_MULTIKEY")
+    # DID_WEB_SERVER_URL: str = os.getenv("DID_WEB_SERVER_URL")
+    # PUBLISHER_MULTIKEY: str = os.getenv("PUBLISHER_MULTIKEY")
 
     ISSUER_REGISTRY_URL: str = os.getenv("ISSUER_REGISTRY_URL")
+    WITNESS_KEY: str = os.getenv("WITNESS_KEY")
 
-    SECRET_KEY: str = TRACTION_API_KEY
-    JWT_SECRET: str = TRACTION_API_KEY
-    JWT_ALGORITHM: str = "HS256"
+    # SECRET_KEY: str = TRACTION_API_KEY
+    # JWT_SECRET: str = TRACTION_API_KEY
+    # JWT_ALGORITHM: str = "HS256"
 
-    MONGO_HOST: str = os.getenv("MONGO_HOST")
-    MONGO_PORT: str = os.getenv("MONGO_PORT")
-    MONGO_USER: str = os.getenv("MONGO_USER")
-    MONGO_PASSWORD: str = os.getenv("MONGO_PASSWORD")
-    MONGO_DB: str = os.getenv("MONGO_DB")
+    # MONGO_HOST: str = os.getenv("MONGO_HOST", 'mongo')
+    # MONGO_PORT: str = os.getenv("MONGO_PORT", '8080')
+    # MONGO_USER: str = os.getenv("MONGO_USER", 'mongo')
+    # MONGO_PASSWORD: str = os.getenv("MONGO_PASSWORD", 'mongo')
+    # MONGO_DB: str = os.getenv("MONGO_DB", 'mongo')
+    MONGO_URI: Union[str, None] = os.getenv("MONGO_URI")
 
 settings = Settings()

@@ -1,0 +1,84 @@
+{% extends('layouts/base.min.jinja') %}
+{% block page %}
+
+<div class="container">
+    {% include('components/brand.jinja') %}
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-vcenter table-mobile-md card-table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Identifier</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for issuer in issuers %}
+                        <tr>
+                            <td data-label="Name">
+                                <div class="d-flex py-1 align-items-center">
+                                    {# <span class="avatar me-2" style="background-image: url()"></span> #}
+                                    <div class="flex-fill">
+                                        <div class="font-weight-medium">{{ issuer['name'] }}</div>
+                                        <div class="text-secondary"><a target="_blank"
+                                                href="https://uniresolver.io/#{{ issuer['id'] }}"
+                                                class="text-reset">Resolve</a></div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td data-label="Identifier">
+                                <div>{{ ' '.join((issuer['id'].split(':')[-2]).split('-')).title() }}</div>
+                                <div class="text-secondary">{{ '
+                                    '.join((issuer['id'].split(':')[-1]).split('-')).title() }}</div>
+                            </td>
+                            <td class="text-secondary" data-label="Role">
+                                {% if issuer['active'] %}
+                                <span class="badge badge-outline text-success">Active</span>
+                                {% else %}
+                                <span class="badge badge-outline text-warning">Pending</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="card-footer bg-transparent mt-auto">
+            <div class="btn-list justify-content-end">
+                <a href="{{ url_for('admin.logout') }}" class="btn">
+                    Exit
+                </a>
+                <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-offer-credential">
+                    Offer Auth Credential
+                </a>
+                {% include('pages/admin/modal_offer_credential.jinja') %}
+                <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-add-issuer">
+                    Register New Issuer
+                </a>
+                {% include('pages/admin/modal_add_issuer.jinja') %}
+            </div>
+        </div>
+    </div>
+    <div class="alert alert-info alert-dismissible mt-3" role="alert">
+        <div class="d-flex">
+            <div>
+                <!-- Download SVG icon from http://tabler.io/icons/icon/info-circle -->
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="icon alert-icon icon-2">
+                    <path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0"></path>
+                    <path d="M12 9h.01"></path>
+                    <path d="M11 12h1v4h1"></path>
+                </svg>
+            </div>
+            <div>{{ session.get('short_url') }}</div>
+        </div>
+        <a class="btn-close" data-bs-dismiss="alert" aria-label="close"></a>
+    </div>
+</div>
+
+
+{% endblock %}

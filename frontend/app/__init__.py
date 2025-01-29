@@ -8,6 +8,7 @@ import logging
 
 from app.routes.errors import bp as errors_bp
 from app.routes.main import bp as main_bp
+from app.routes.admin import bp as admin_bp
 
 
 def create_app(config_class=Config):
@@ -21,5 +22,6 @@ def create_app(config_class=Config):
 
     app.register_blueprint(errors_bp)
     app.register_blueprint(main_bp)
+    app.register_blueprint(admin_bp, url_prefix='/admin')
 
     return app

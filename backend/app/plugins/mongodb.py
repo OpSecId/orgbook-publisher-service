@@ -9,12 +9,15 @@ class MongoClientError(Exception):
 
 class MongoClient:
     def __init__(self):
-        self.client = pymongo.MongoClient(
-            f'{settings.MONGO_HOST}:{settings.MONGO_PORT}',
-            username=settings.MONGO_USER,
-            password=settings.MONGO_PASSWORD,
-            authSource=settings.MONGO_DB,
-        )
+        if settings.MONGO_URI:
+            self.client = pymongo.MongoClient(settings.MONGO_URI)
+        else:
+            self.client = pymongo.MongoClient(
+                f'{settings.MONGO_HOST}:{settings.MONGO_PORT}',
+                username=settings.MONGO_USER,
+                password=settings.MONGO_PASSWORD,
+                authSource=settings.MONGO_DB,
+            )
         self.db = self.client["orgbook-publisher"]
 
     def provision(self):
