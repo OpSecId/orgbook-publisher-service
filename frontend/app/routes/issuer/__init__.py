@@ -63,10 +63,9 @@ def create_presentation_request():
         attributes=['id', 'email', 'target']
     )
     oob_id = pres_req_ex.get('oob_id')
-    invitation = pres_req_ex.get('invitation')
-    with open(f'app/static/invitations/{oob_id}.json', 'w+') as f:
-        f.write(json.dumps(invitation, indent=2))
-    session['pres_ex_url'] = f'https://{Config.DOMAIN}/out-of-band/{oob_id}'
+    with open(f'app/static/invitations/{pres_ex_id}.json', 'w+') as f:
+        f.write(json.dumps(pres_req_ex, indent=2))
+    session['pres_ex_url'] = f'https://{Config.DOMAIN}/out-of-band/{pres_ex_id}?_oobid={oob_id}'
     session['pres_ex_id'] = pres_ex_id
 
 

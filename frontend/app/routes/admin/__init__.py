@@ -44,11 +44,9 @@ def create_credential_offer(email):
             'expiration': str(time.time()),
         }
     )
-    oob_id = cred_offer_ex.get('oob_id')
-    invitation = cred_offer_ex.get('invitation')
-    with open(f'app/static/invitations/{oob_id}.json', 'w+') as f:
-        f.write(json.dumps(invitation, indent=2))
-    session['cred_ex_url'] = f'https://{Config.DOMAIN}/out-of-band/{oob_id}'
+    with open(f'app/static/invitations/{cred_ex_id}.json', 'w+') as f:
+        f.write(json.dumps(cred_offer_ex, indent=2))
+    session['cred_ex_url'] = f'https://{Config.DOMAIN}/out-of-band/{cred_ex_id}'
     session['cred_ex_id'] = cred_ex_id
 
 def get_issuers():
