@@ -83,6 +83,7 @@ class TractionController:
             f"{self.endpoint}/multitenancy/tenant/{self.tenant_id}/token",
             json={"api_key": self.api_key},
         )
+        settings.LOGGER.info(r.text)
         token = self._try_response(r, "token")
         self.headers = {"Authorization": f"Bearer {token}"}
 
