@@ -1,4 +1,4 @@
-from typing import Dict, Any
+from typing import Dict, Any, Union
 from pydantic import BaseModel, Field
 
 
@@ -25,8 +25,8 @@ class CredentialTypeRecord(BaseModel):
     core_paths: dict = Field()
     subject_type: str = Field()
     subject_paths: dict = Field()
-    additional_type: str = Field(None)
-    additional_paths: dict = Field(None)
+    additional_type: Union[str, None] = Field(None)
+    additional_paths: Union[dict, None] = Field(None)
     status_lists: list = Field()
 
 

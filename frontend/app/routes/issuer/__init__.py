@@ -109,7 +109,7 @@ def index():
     
     session['email'] = '@gov.bc.ca'
     session['issuer'] = {
-        'id': 'did:web:example.com',
+        'id': 'did:web:traceability.site:test:11',
         'name': 'Chief Permitting Officer'
     }
     
@@ -127,7 +127,7 @@ def index():
             publisher = PublisherController()
             
             credential_name = form_credential_registration.credential_name.data
-            credential_type = ''.join(credential_name.title().split())
+            subject_type = ''.join(credential_name.title().split())
             version = '1.0'
             
             csv_file = form_credential_registration.csv_file_register.data
@@ -146,7 +146,7 @@ def index():
                 'cardinalityId': subject_paths[document_id]
             }
             registration = publisher.register_credential(
-                credential_type,
+                subject_type,
                 version,
                 session['issuer']['id'],
                 subject_paths,

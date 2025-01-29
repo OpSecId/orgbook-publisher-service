@@ -69,13 +69,15 @@ class PublisherController:
         except:
             raise PublisherControllerError()
         
-    def register_credential(self, credential_type, version, issuer, subject_paths, core_paths):
+    def register_credential(self, subject_type, version, issuer, subject_paths, core_paths):
         registration = CredentialRegistration(
-            type=credential_type,
+            type=f'{subject_type}Credential',
+            subjectType=subject_type,
             version=version,
             issuer=issuer,
             corePaths=core_paths,
             subjectPaths=subject_paths,
+            additionalPaths={},
             relatedResources={
                 'context': 'https://www.w3.org/ns/credentials/examples/v2'
             }
