@@ -21,7 +21,7 @@ class PublisherRegistrarError(Exception):
 class PublisherRegistrar:
     def __init__(self):
         self.did_web_server = settings.DID_WEB_SERVER_URL
-        self.publisher_multikey = settings.PUBLISHER_MULTIKEY
+        self.witness_key = settings.WITNESS_KEY
 
     async def register_issuer(self, registration):
         """Register a new issuer with the TDW server."""
@@ -136,7 +136,7 @@ class PublisherRegistrar:
         # Endorse DID document
         publisher_proof_options = r.json()["proofOptions"].copy()
         publisher_proof_options["verificationMethod"] = (
-            f"did:key:{self.publisher_multikey}#{self.publisher_multikey}"
+            f"did:key:{self.witness_key}#{self.witness_key}"
         )
         endorsed_did_document = traction.add_di_proof(
             document=signed_did_document, 
