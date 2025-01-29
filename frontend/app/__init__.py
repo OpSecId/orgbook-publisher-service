@@ -2,6 +2,8 @@ from flask import Flask
 from flask_cors import CORS
 from flask_qrcode import QRcode
 from flask_session import Session
+# from flask_bootstrap import Bootstrap
+# from flask_colorpicker import colorpicker
 
 from config import Config
 import logging
@@ -20,6 +22,8 @@ def create_app(config_class=Config):
     CORS(app)
     QRcode(app)
     # Session(app)
+    # Bootstrap(app)
+    # colorpicker(app)
 
     app.register_blueprint(errors_bp)
     app.register_blueprint(main_bp)

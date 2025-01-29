@@ -1,0 +1,26 @@
+{
+    "overlays": [
+        {
+            "type": "vc/overlays/pointers/1.0",
+            "jsonPointers": {
+                "permitNo": "/credentialSubject/permitNo",
+                "registrationId": "/credentialSubject/registrationId",
+                "permitteeName": "/credentialSubject/permitteeName",
+                "permitteeRegisteredId": "/credentialSubject/permitteeRegisteredId",
+                "mineNo": "/credentialSubject/mineNo",
+                "validFrom": "/credentialSubject/validFrom"
+            }
+        },
+        {
+            "type": "vc/overlays/pointers/1.0",
+            "jsonPointers": {
+                "permitNo": "",
+                "registrationId": "",
+                "permitteeName": "",
+                "permitteeRegisteredId": "",
+                "mineNo": "",
+                "validFrom": ""
+            }
+        }
+    ]
+}

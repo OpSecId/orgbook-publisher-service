@@ -18,15 +18,36 @@ from .forms import (
 
 import time
 import json
+import os
+from werkzeug.utils import secure_filename
 
 bp = Blueprint("issuer", __name__)
 
-
+UPLOAD_FOLDER = os.path.join('staticFiles', 'uploads')
+ALLOWED_EXTENSIONS = {'csv'}
 # @bp.before_request
 # def before_request_callback():
 #     if not session.get('pres_req'):
 #         session['pres_req'] = {}
 
+def update_json_with_pointers(credential, pointers):
+    for pointer, value in pointers.items():
+        keys = pointer.strip("/").split("/")
+        temp = credential
+        
+        for key in keys[:-1]:  # Navigate through existing or create missing dictionaries
+            if key not in temp or not isinstance(temp[key], dict):
+                temp[key] = {}  # Ensure key exists and is a dictionary
+            temp = temp[key]
+        
+        # Assign the new value at the final key
+        temp[keys[-1]] = value
+
+def get_default_pointers(attributes):
+    pointers = {}
+    for attribute in attributes:
+        pointers[attribute] = f'/credentialSubject/{attribute}'
+    return pointers
 
 def create_presentation_request():
     traction = TractionController()
@@ -49,7 +70,21 @@ def create_presentation_request():
     session['pres_ex_id'] = pres_ex_id
 
 
-def get_credentials():
+def get_credential_types():
+    credential_types = []
+    credential_types += [
+        {
+            'type': 'MinesActPermit',
+            'extendedType': 'DigitalConformityCredential',
+            'context': 'https://',
+            'version': '1.0',
+            'count': 73
+        }
+    ]
+    return credential_types
+
+
+def get_credentials(credential_type):
     publisher = PublisherController()
     credentials = publisher.get_credentials()
     return credentials
@@ -61,28 +96,124 @@ def index():
     if not session.get('issuer_id'):
         return redirect(url_for("issuer.logout"))
     
-    credential_types = []
+    session['email'] = '@gov.bc.ca'
+    session['issuer'] = {
+        'id': '',
+        'name': 'Chief Permitting Officer'
+    }
     
     form_credential_registration = RegisterCredentialForm()
     form_credential_issuance = IssuerCredentialForm()
+    
+    credential_types = get_credential_types()
+    
     form_credential_issuance.credential_type.choices = [("", "")] + [
         (entry['type'], entry['type']) for entry in credential_types
     ]
-    if form_credential_registration.validate() and request.method == "POST":
-        publisher = PublisherController()
-        return redirect(url_for('issuer.index'))
+    if request.method == "POST":
+        # if form_credential_registration.validate():
+        if form_credential_registration.submit_register.data:
+            csv_file = form_credential_registration.csv_file_register.data
+            csv_data = csv_file.read().decode("utf-8").split('\n')
+            
+            header_row = [item.strip() for item in csv_data[0].split(',')]
+            pointers_overlay = {
+                'type': 'vc/spec/pointers/1.0',
+                'attributes_pointers': get_default_pointers(header_row)
+            }
+            branding_overlay = {
+                'type': 'vc/spec/pointers/1.0',
+                'attributes_pointers': get_default_pointers(header_row)
+            }
+            
+            
+            
+            return redirect(url_for('issuer.index'))
     
-    elif form_credential_issuance.validate() and request.method == "POST":
-        
-        traction = TractionController()
-        traction.set_headers(session['access_token'])
-        return redirect(url_for('issuer.index'))
+        elif form_credential_issuance.submit_issue.data:
+            csv_file = form_credential_issuance.csv_file_issue.data
+            csv_data = csv_file.read().decode("utf-8").split('\n')
+            
+            header_row = [item.strip() for item in csv_data[0].split(',')]
+            pointers = get_default_pointers(header_row)
+                
+            data_entries = csv_data[1:]
+            claims = {}
+            for entry_idx, entry_data in enumerate(data_entries):
+                credential = {
+                    '@context': [
+                        'https://www.w3.org/ns/credentials/v2',
+                        'https://www.w3.org/ns/credentials/examples/v2'
+                    ],
+                    'type': ['VerifiableCredential'],
+                    'issuer': session['issuer']
+                }
+                
+                data_entries[entry_idx] = [item.strip() for item in entry_data.split(',')]
+                for attribute_idx, attribute in enumerate(data_entries[entry_idx]):
+                    claims[pointers[header_row[attribute_idx]]] = attribute
+                update_json_with_pointers(credential, claims)
+                
+                
+            return redirect(url_for('issuer.index'))
 
     return render_template(
         'pages/issuer/index.jinja',
         credential_types=credential_types,
         form_credential_registration=form_credential_registration,
         form_credential_issuance=form_credential_issuance
+    )
+
+
+
+@bp.route("/credential-types/<credential_type>", methods=["GET", "POST"])
+def manage_credential_type(credential_type: str):
+    if not session.get('issuer_id'):
+        return redirect(url_for("issuer.logout"))
+    
+    credential_types = get_credential_types()
+    if credential_type not in [credential_type.get('type') for credential_type in credential_types]:
+        return redirect(url_for('issuer.index'))
+    credentials = [
+        {
+            "validFrom": "",
+            "validUntil": "",
+            "credentialSubject": {
+                "permitNo": "",
+                "issuedToParty": {
+                    "registeredId"
+                }
+            },
+            "credentialStatus": [
+                {
+                    "statusPurpose": "revocation"
+                },
+                {
+                    "statusPurpose": "suspension"
+                },
+                {
+                    "statusPurpose": "refresh"
+                },
+            ],
+        }
+    ]
+    attribute_paths = {
+    }
+    credential_records = [{
+        'sourceId': 'C-112',
+        'registeredId': 'A0493A',
+        'validFrom': '2024-01-01T00:00:00Z',
+        'validUntil': '2024-01-02T00:00:00Z',
+        'latest': True,
+        'revoked': False,
+        'suspended': False,
+    }]
+    
+
+    return render_template(
+        'pages/issuer/credentials.jinja',
+        credential_type=credential_type,
+        credentials=credential_records
     )
 
 
@@ -103,8 +234,10 @@ def login():
         traction = TractionController()
         traction.set_headers(session['access_token'])
         verification = traction.verify_presentation(session['pres_ex_id'])
+        print(verification)
         if verification.get('verified'):
-            session['issuer_id'] = ''
+            pass
+        session['issuer_id'] = 'did:web:example.com:mines-act:chief-permitting-officer'
         return redirect(url_for('issuer.index'))
         
     return render_template(
