@@ -88,7 +88,7 @@ def index():
     form_credential_offer.issuer.choices = [("", "")] + [
         (issuer['id'], issuer['name']) for issuer in issuers if issuer['active']
     ]
-    if request.method == "POST" and form_issuer_registration.submit.data:
+    if request.method == "POST" and form_issuer_registration.submit_register.data:
         publisher = PublisherController()
         issuer_registration = publisher.register_issuer(
             request.form.get('scope'),
@@ -97,7 +97,7 @@ def index():
         )
         print(issuer_registration)
         return redirect(url_for('admin.index'))
-    elif request.method == "POST" and form_credential_offer.submit.data:
+    elif request.method == "POST" and form_credential_offer.submit_offer.data:
         
         email = request.form.get('email')
         

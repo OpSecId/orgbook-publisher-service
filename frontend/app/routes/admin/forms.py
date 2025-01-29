@@ -28,7 +28,7 @@ class RegisterIssuerForm(FlaskForm):
     description = StringField(
         "Description", [InputRequired()]
     )
-    submit = SubmitField("Register")
+    submit_register = SubmitField("Register")
 
 class OfferAuthCredentialForm(FlaskForm):
     email = EmailField(
@@ -40,4 +40,4 @@ class OfferAuthCredentialForm(FlaskForm):
     # expiration = DateTimeField(
     #     "Expiration", []
     # )
-    submit = SubmitField("Offer")
+    submit_offer = SubmitField("Offer")
