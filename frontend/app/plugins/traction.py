@@ -62,7 +62,6 @@ class TractionController:
             cred_ex_id=cred_offer['cred_ex_id'], 
             handshake=True
         )
-        return invitation
         return cred_offer['cred_ex_id'], invitation
     
     def create_cred_offer(self, cred_def_id, attributes):
