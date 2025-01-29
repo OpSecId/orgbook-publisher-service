@@ -15,61 +15,40 @@
                         <span class="avatar avatar-1" style="background-image: url()"></span>
                     </div> #}
                     <div class="col">
-                        <div class="card-title">Credential Management</div>
+                        <div class="card-title">
+                            {{ session['issuer']['name'] }}</div>
                         <div class="card-subtitle">{{ session['email'] }}</div>
                     </div>
                 </div>
             </div>
             <div class="card-actions">
-                <div class="dropdown">
-                    <a href="#" class="btn-action dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true"
-                        aria-expanded="false">
-                        <!-- Download SVG icon from http://tabler.io/icons/icon/dots-vertical -->
+                <div class="btn-list justify-content-end">
+                    <a href="#" class="btn btn-primary" data-bs-toggle="modal"
+                        data-bs-target="#modal-register-credential">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                            class="icon icon-1">
-                            <path d="M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"></path>
-                            <path d="M12 19m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"></path>
-                            <path d="M12 5m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"></path>
+                            class="icon icon-2">
+                            <path d="M12 5l0 14"></path>
+                            <path d="M5 12l14 0"></path>
                         </svg>
+                        Credential Type
                     </a>
-                    <div class="dropdown-menu dropdown-menu-end" style>
-                        <a href="#" class="dropdown-item" data-bs-toggle="modal"
-                            data-bs-target="#modal-register-credential">
-                            Register Credential Type
-                        </a>
-                        <a href="#" class="dropdown-item" data-bs-toggle="modal"
-                            data-bs-target="#modal-issue-credentials">
-                            Issue Credential Batch
-                        </a>
-                        <a href="{{ url_for('issuer.logout') }}" class="dropdown-item"> Exit </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
-
-
-        <div class="card-body">
-            <div class="datagrid">
-                <div class="datagrid-item">
-                    <div class="datagrid-title">Status</div>
-                    <div class="datagrid-content">
-                        <!-- Download SVG icon from http://tabler.io/icons/icon/check -->
+                    <a href="#" class="btn btn-primary" data-bs-toggle="modal"
+                        data-bs-target="#modal-issue-credentials">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                            class="icon text-green icon-2">
-                            <path d="M5 12l5 5l10 -10"></path>
+                            class="icon icon-tabler icons-tabler-outline icon-tabler-pencil-plus">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                            <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+                            <path d="M13.5 6.5l4 4" />
+                            <path d="M16 19h6" />
+                            <path d="M19 16v6" />
                         </svg>
-                        Active
-                    </div>
-                </div>
-                <div class="datagrid-item">
-                    <div class="datagrid-title">Issuer</div>
-                    <div class="datagrid-content">
-                        {{ session['issuer']['name'] }}
-                    </div>
+                        Credential Batch
+                    </a>
+                    <a href="{{ url_for('admin.logout') }}" class="btn">
+                        Exit
+                    </a>
                 </div>
             </div>
         </div>
@@ -82,14 +61,16 @@
 
 
 
-            <a class="card card-link" href="{{ url_for('issuer.manage_credential_type', credential_type=credential_type.get('type')) }}">
+            <a class="card card-link"
+                href="{{ url_for('issuer.manage_credential_type', credential_type=credential_type.get('type')) }}">
                 <div class="card-body">
                     <div class="row">
                         {# <div class="col-auto">
                             <span class="avatar avatar-2 rounded">EP</span>
                         </div> #}
                         <div class="col">
-                            <div class="font-weight-medium">{{ credential_type.get('type') }} v{{ credential_type.get('version') }}</div>
+                            <div class="font-weight-medium">{{ credential_type.get('type') }} v{{
+                                credential_type.get('version') }}</div>
                             <div class="text-secondary">{{ credential_type.get('extendedType') }}</div>
                         </div>
                     </div>

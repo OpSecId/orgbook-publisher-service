@@ -5,6 +5,7 @@ from wtforms import (
     PasswordField,
     SelectField,
     EmailField,
+    TextAreaField,
     DateTimeField
 )
 from wtforms.validators import InputRequired
@@ -25,7 +26,7 @@ class RegisterIssuerForm(FlaskForm):
     name = StringField(
         "Name", [InputRequired()]
     )
-    description = StringField(
+    description = TextAreaField(
         "Description", [InputRequired()]
     )
     submit_register = SubmitField("Register")

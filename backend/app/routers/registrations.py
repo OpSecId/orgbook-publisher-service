@@ -59,6 +59,23 @@ async def register_issuer(request_body: IssuerRegistration):
 
     return JSONResponse(status_code=201, content=did_document)
 
+@router.get("/credentials", tags=["Admin"], dependencies=[Depends(check_api_key_header)])
+async def list_credential_registrations(type: str, version: str, issuer: str):
+    mongo = MongoClient()
+    query = {}
+    if type:
+        query['type'] = type
+    if version:
+        query['version'] = version
+    if issuer:
+        query['issuer'] = issuer
+    credential_type_records = mongo.find(
+        "CredentialTypeRecord",
+        query
+    )
+    credential_type_records = [json.loads(json.dumps(credential_type_record, default=str)) for credential_type_record in credential_type_records]
+    return JSONResponse(status_code=200, content=credential_type_records)
+
 
 @router.post(
     "/credentials", tags=["Admin"], dependencies=[Depends(check_api_key_header)]
