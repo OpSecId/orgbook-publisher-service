@@ -53,19 +53,19 @@ def create_credential_offer(email):
 def get_issuers():
     publisher = PublisherController()
     issuers = publisher.get_issuers()
-    issuers += [{
-        'id': 'did:web:example.com:mines-act:chief-permitting-officer',
-        'name': 'Chief Permitting Officer'
-    },{
-        'id': 'did:web:example.com:petroleum-and-natural-gas-act:director-of-petroleum-lands',
-        'name': 'Director of Petroleum Lands'
-    }]
+    # issuers += [{
+    #     'id': 'did:web:example.com:mines-act:chief-permitting-officer',
+    #     'name': 'Chief Permitting Officer'
+    # },{
+    #     'id': 'did:web:example.com:petroleum-and-natural-gas-act:director-of-petroleum-lands',
+    #     'name': 'Director of Petroleum Lands'
+    # }]
     
     registry = publisher.get_registry()
-    registry += [{
-        'id': 'did:web:example.com:mines-act:chief-permitting-officer',
-        'name': 'Chief Permitting Officer'
-    }]
+    # registry += [{
+    #     'id': 'did:web:example.com:mines-act:chief-permitting-officer',
+    #     'name': 'Chief Permitting Officer'
+    # }]
 
     for issuer in issuers:
         issuer['active'] = True if issuer['id'] in [
