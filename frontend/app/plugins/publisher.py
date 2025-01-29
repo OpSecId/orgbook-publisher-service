@@ -25,6 +25,7 @@ class PublisherController:
             f'{self.endpoint}/registrations/issuers',
             headers={'X-API-KEY': self.api_key}
         )
+        print(r.text)
         try:
             return r.json()
         except:
@@ -32,6 +33,7 @@ class PublisherController:
         
     def get_registry(self):
         r = requests.get(Config.ISSUER_REGISTRY)
+        print(r.text)
         try:
             registry = r.json().get('registry')
             if not isinstance(registry, list):
@@ -40,15 +42,17 @@ class PublisherController:
         except:
             raise PublisherControllerError()
         
-    def register_issuer(self, scope, name):
+    def register_issuer(self, scope, name, description):
         r = requests.post(
             f'{self.endpoint}/registrations/issuers',
             headers={'X-API-KEY': self.api_key},
             json={
                 'scope': scope,
-                'name': name
+                'name': name,
+                'description': description
             }
         )
+        print(r.text)
         try:
             return r.json()
         except:

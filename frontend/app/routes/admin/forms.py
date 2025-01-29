@@ -25,6 +25,9 @@ class RegisterIssuerForm(FlaskForm):
     name = StringField(
         "Name", [InputRequired()]
     )
+    description = StringField(
+        "Description", [InputRequired()]
+    )
     submit = SubmitField("Register")
 
 class OfferAuthCredentialForm(FlaskForm):

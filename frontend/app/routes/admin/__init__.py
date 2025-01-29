@@ -22,10 +22,11 @@ import json
 bp = Blueprint("admin", __name__)
 
 
-# @bp.before_request
-# def before_request_callback():
-#     if not session.get('tenant_id'):
-#         return redirect(url_for("admin.logout"))
+@bp.before_request
+def before_request_callback():
+    session['issuer_registry'] = Config.ISSUER_REGISTRY
+    # if not session.get('tenant_id'):
+    #     return redirect(url_for("admin.logout"))
 
 
 def create_credential_offer(email):
@@ -87,14 +88,16 @@ def index():
     form_credential_offer.issuer.choices = [("", "")] + [
         (issuer['id'], issuer['name']) for issuer in issuers if issuer['active']
     ]
-    if form_issuer_registration.validate() and request.method == "POST":
+    if request.method == "POST" and form_issuer_registration.submit.data:
         publisher = PublisherController()
         issuer_registration = publisher.register_issuer(
             request.form.get('scope'),
             request.form.get('name'),
+            request.form.get('description'),
         )
+        print(issuer_registration)
         return redirect(url_for('admin.index'))
-    elif form_credential_offer.validate() and request.method == "POST":
+    elif request.method == "POST" and form_credential_offer.submit.data:
         
         email = request.form.get('email')
         

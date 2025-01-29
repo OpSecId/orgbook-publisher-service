@@ -3,7 +3,61 @@
 
 <div class="container">
     {% include('components/brand.jinja') %}
+    {% include('pages/admin/modal_offer_credential.jinja') %}
+    {% include('pages/admin/modal_add_issuer.jinja') %}
     <div class="card">
+
+        <div class="card-header">
+            <div>
+                <div class="row align-items-center">
+                    {# <div class="col-auto">
+                        <span class="avatar avatar-1" style="background-image: url()"></span>
+                    </div> #}
+                    <div class="col">
+                        <div class="card-title">Issuer Management</div>
+                        <div class="card-subtitle"><a target="_blank" href="{{ session['issuer_registry'] }}">Trust Registry</a></div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-actions">
+                <div class="btn-list justify-content-end">
+                    <a href="#" class="btn btn-primary btn-3" data-bs-toggle="modal" data-bs-target="#modal-add-issuer">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            class="icon icon-2">
+                            <path d="M12 5l0 14"></path>
+                            <path d="M5 12l14 0"></path>
+                        </svg>
+                        Issuer
+                    </a>
+                    <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-offer-credential">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            class="icon icon-tabler icons-tabler-outline icon-tabler-qrcode">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                            <path d="M4 4m0 1a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1z" />
+                            <path d="M7 17l0 .01" />
+                            <path d="M14 4m0 1a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1z" />
+                            <path d="M7 7l0 .01" />
+                            <path d="M4 14m0 1a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1z" />
+                            <path d="M17 7l0 .01" />
+                            <path d="M14 14l3 0" />
+                            <path d="M20 14l0 .01" />
+                            <path d="M14 14l0 3" />
+                            <path d="M14 20l3 0" />
+                            <path d="M17 17l3 0" />
+                            <path d="M20 17l0 3" />
+                        </svg>
+                        Authorization
+                    </a>
+                    <a href="{{ url_for('admin.logout') }}" class="btn">
+                        Exit
+                    </a>
+                </div>
+            </div>
+        </div>
+
+
         <div class="card-body">
             <div class="table-responsive">
                 <table class="table table-vcenter table-mobile-md card-table">
@@ -48,17 +102,6 @@
         </div>
         <div class="card-footer bg-transparent mt-auto">
             <div class="btn-list justify-content-end">
-                <a href="{{ url_for('admin.logout') }}" class="btn">
-                    Exit
-                </a>
-                <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-offer-credential">
-                    Offer Auth Credential
-                </a>
-                {% include('pages/admin/modal_offer_credential.jinja') %}
-                <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-add-issuer">
-                    Register New Issuer
-                </a>
-                {% include('pages/admin/modal_add_issuer.jinja') %}
             </div>
         </div>
     </div>
