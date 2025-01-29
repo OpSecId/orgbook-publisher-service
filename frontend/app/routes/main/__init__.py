@@ -11,9 +11,29 @@ def index():
     return render_template("pages/main/index.jinja", title=Config.APP_NAME)
 
 @bp.route("/out-of-band/<exchange_id>", methods=["GET"])
-def short_oob_url(exchange_id: str):
+def short_oob_ex(exchange_id: str):
     try:
         uuid.UUID(exchange_id)
+        with open(f'app/static/invitations/{exchange_id}.json', 'r') as f:
+            exchange = json.loads(f.read())
+    except:
+        return {
+            'detail': 'Invitation not found',
+            'invitation_id': exchange_id
+        }, 404
+    
+    oob_id = exchange.get('oob_id')
+    short_url = f'https://{Config.DOMAIN}/out-of-band/{exchange_id}/{oob_id}'
+    return render_template(
+        'pages/main/exchange.jinja',
+        short_url=short_url
+    )
+
+@bp.route("/out-of-band/<exchange_id>/<oob_id>", methods=["GET"])
+def short_oob_url(exchange_id: str, oob_id: str):
+    try:
+        uuid.UUID(exchange_id)
+        uuid.UUID(oob_id)
         with open(f'app/static/invitations/{exchange_id}.json', 'r') as f:
             exchange = json.loads(f.read())
         invitation = exchange.get('invitation')
@@ -23,13 +43,6 @@ def short_oob_url(exchange_id: str):
             'invitation_id': exchange_id
         }, 404
     
-    oob_id = exchange.get('oob_id')
-    oob_id_param = request.args.get('_oobid')
-    print(oob_id_param)
-    if oob_id_param == oob_id:
+    ex_oob_id = exchange.get('oob_id')
+    if ex_oob_id == oob_id:
         return invitation
-    short_url = f'https://{Config.DOMAIN}/out-of-band/{exchange_id}?_oobid={oob_id}'
-    return render_template(
-        'pages/main/exchange.jinja',
-        short_url=short_url
-    )
