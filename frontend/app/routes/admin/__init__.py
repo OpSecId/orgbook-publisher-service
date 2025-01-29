@@ -28,6 +28,29 @@ bp = Blueprint("admin", __name__)
 #         return redirect(url_for("admin.logout"))
 
 
+def create_credential_offer(email):
+    traction = TractionController()
+    traction.set_headers(session['access_token'])
+    
+    # TODO, timestamp in future
+    cred_ex_id, cred_offer_ex = traction.offer_credential(
+        email,
+        Config.AUTH_CRED_DEF_ID,
+        {
+            'id': request.form.get('issuer'),
+            'role': 'issuer',
+            'email': email,
+            'target': Config.PUBLISHER_API_URL,
+            'expiration': str(time.time()),
+        }
+    )
+    oob_id = cred_offer_ex.get('oob_id')
+    invitation = cred_offer_ex.get('invitation')
+    with open(f'app/static/invitations/{oob_id}.json', 'w+') as f:
+        f.write(json.dumps(invitation, indent=2))
+    session['cred_ex_url'] = f'https://{Config.DOMAIN}/out-of-band/{oob_id}'
+    session['cred_ex_id'] = cred_ex_id
+
 def get_issuers():
     publisher = PublisherController()
     issuers = publisher.get_issuers()
@@ -80,27 +103,8 @@ def index():
         if email.split('@')[-1] != Config.RESTRICTED_EMAIL:
             pass
         
+        create_credential_offer(request.form.get('email'))
         
-        traction = TractionController()
-        traction.set_headers(session['access_token'])
-        
-        # TODO, timestamp in future
-        cred_offer = traction.offer_credential(
-            email,
-            Config.AUTH_CRED_DEF_ID,
-            {
-                'id': request.form.get('issuer'),
-                'role': 'issuer',
-                'email': email,
-                'target': Config.PUBLISHER_API_URL,
-                'expiration': str(time.time()),
-            }
-        )
-        oob_id = cred_offer.get('oob_id')
-        invitation = cred_offer.get('invitation')
-        with open(f'app/static/invitations/{oob_id}.json', 'w+') as f:
-            f.write(json.dumps(invitation, indent=2))
-        session['short_url'] = f'https://{Config.DOMAIN}/out-of-band/{oob_id}'
         return redirect(url_for('admin.index'))
 
     return render_template(

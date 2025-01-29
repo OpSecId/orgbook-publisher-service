@@ -1,0 +1,48 @@
+{
+  "@type": "https://didcomm.org/out-of-band/1.1/invitation",
+  "@id": "0d7a93d6-8867-4499-adb8-6c87950e869b",
+  "label": "Orgbook Publisher Service",
+  "imageUrl": "https://github.com/OpSecId/orgbook-publisher/blob/main/assets/icon.png?raw=true",
+  "handshake_protocols": [],
+  "requests~attach": [
+    {
+      "@id": "request-0",
+      "mime-type": "application/json",
+      "data": {
+        "json": {
+          "@type": "https://didcomm.org/present-proof/2.0/request-presentation",
+          "@id": "d88284cc-e916-4799-9960-b9ab3e5dafb2",
+          "~thread": {
+            "pthid": "0d7a93d6-8867-4499-adb8-6c87950e869b"
+          },
+          "will_confirm": true,
+          "formats": [
+            {
+              "attach_id": "indy",
+              "format": "hlindy/proof-req@v2.0"
+            }
+          ],
+          "request_presentations~attach": [
+            {
+              "@id": "indy",
+              "mime-type": "application/json",
+              "data": {
+                "base64": "eyJuYW1lIjogIkF1dGhvcml6ZWQgUHVibGlzaGVyIiwgInZlcnNpb24iOiAiMS4wIiwgIm5vbmNlIjogIjcwMDgzMTMxIiwgInJlcXVlc3RlZF9hdHRyaWJ1dGVzIjogeyJyZXF1ZXN0ZWRBdHRyaWJ1dGVzIjogeyJuYW1lcyI6IFsiaWQiLCAiZW1haWwiLCAidGFyZ2V0Il0sICJyZXN0cmljdGlvbnMiOiBbeyJpc3N1ZXJfZGlkIjogIk1vMlQ3NlpLY1F2ZFlOUGRnR2JNRmkiLCAic2NoZW1hX2lkIjogIk1vMlQ3NlpLY1F2ZFlOUGRnR2JNRmk6MjpQdWJsaXNoZXJJc3N1aW5nQXV0aG9yaXphdGlvbjowLjEifV19fSwgInJlcXVlc3RlZF9wcmVkaWNhdGVzIjoge319"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "services": [
+    {
+      "id": "#inline",
+      "type": "did-communication",
+      "recipientKeys": [
+        "did:key:z6MkffhoaiBcS25e5pdUvX8c5DkeZYqPHM3j3qP6vWMRMg4t#z6MkffhoaiBcS25e5pdUvX8c5DkeZYqPHM3j3qP6vWMRMg4t"
+      ],
+      "serviceEndpoint": "https://traction-acapy-dev.apps.silver.devops.gov.bc.ca"
+    }
+  ]
+}

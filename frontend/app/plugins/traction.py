@@ -1,5 +1,6 @@
 from flask import current_app
 from config import Config
+from random import randint
 import requests
 
 
@@ -35,7 +36,19 @@ class TractionController:
             key = r.json()['multikey']
         except:
             raise TractionControllerError('No key')
-        return token    
+        return token       
+        
+    def request_token(self, tenant_id, api_key):
+        r = requests.post(
+            f'{self.endpoint}/multitenancy/tenant/{tenant_id}/token',
+            json={
+                'api_key': api_key
+            }
+        )
+        try:
+            return r.json()['token']
+        except:
+            raise TractionControllerError('No token')
         
     def set_headers(self, token):
         self.headers={
@@ -50,6 +63,7 @@ class TractionController:
             handshake=True
         )
         return invitation
+        return cred_offer['cred_ex_id'], invitation
     
     def create_cred_offer(self, cred_def_id, attributes):
         endpoint = f'{self.endpoint}/issue-credential-2.0/create'
@@ -79,6 +93,14 @@ class TractionController:
             return r.json()
         except:
             raise TractionControllerError('No exchange')
+    
+    def request_presentation(self, name, issuer, schema_id, attributes):
+        pres_req = self.create_pres_req(name, issuer, schema_id, attributes)
+        invitation = self.create_oob_inv(
+            pres_ex_id=pres_req['pres_ex_id'], 
+            handshake=False
+        )
+        return pres_req['pres_ex_id'], invitation
         
     def create_pres_req(self, name, issuer, schema_id, attributes):
         endpoint = f'{self.endpoint}/present-proof-2.0/create-request'
@@ -89,7 +111,7 @@ class TractionController:
                 'indy': {
                     'name': name,
                     'version': '1.0',
-                    # 'nonce': str(randint(1, 99999999)),
+                    'nonce': str(randint(1, 99999999)),
                     'requested_attributes': {
                         'requestedAttributes': {
                             'names': attributes,
@@ -110,13 +132,16 @@ class TractionController:
             headers=self.headers,
             json=pres_req
         )
-        return r.json()
+        print(r.text)
+        try:
+            return r.json()
+        except:
+            raise TractionControllerError('No exchange')
     
     def create_oob_inv(self, alias=None, cred_ex_id=None, pres_ex_id=None, handshake=False):
         endpoint = f'{self.endpoint}/out-of-band/create-invitation?auto_accept=true'
         invitation = {
             "my_label": "Orgbook Publisher Service",
-            "alias": alias,
             "attachments": [],
             "handshake_protocols": [],
         }
@@ -131,6 +156,7 @@ class TractionController:
                 "type": "credential-offer"
             })
         if handshake:
+            invitation['alias'] = alias
             invitation['handshake_protocols'].append(
                 "https://didcomm.org/didexchange/1.0"
             )
@@ -143,3 +169,14 @@ class TractionController:
             return r.json()
         except:
             raise TractionControllerError('No invitation')
+        
+    def verify_presentation(self, pres_ex_id):
+        endpoint = f'{self.endpoint}/present-proof-2.0/records/{pres_ex_id}'
+        r = requests.get(
+            endpoint,
+            headers=self.headers
+        )
+        try:
+            return r.json()
+        except:
+            raise TractionControllerError('No exchange')

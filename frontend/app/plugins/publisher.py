@@ -26,8 +26,7 @@ class PublisherController:
             headers={'X-API-KEY': self.api_key}
         )
         try:
-            issuers = r.json()
-            return issuers
+            return r.json()
         except:
             raise PublisherControllerError()
         
@@ -49,6 +48,16 @@ class PublisherController:
                 'scope': scope,
                 'name': name
             }
+        )
+        try:
+            return r.json()
+        except:
+            raise PublisherControllerError()
+        
+    def get_credentials(self):
+        r = requests.get(
+            f'{self.endpoint}/credentials/issuers',
+            headers={'X-API-KEY': self.api_key}
         )
         try:
             return r.json()

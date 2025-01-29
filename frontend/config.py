@@ -28,3 +28,4 @@ class Config(object):
     
     RESTRICTED_EMAIL = "gov.bc.ca"
     AUTH_CRED_DEF_ID = os.getenv("AUTH_CRED_DEF_ID")
+    AUTH_SCHEMA_ID = os.getenv("AUTH_SCHEMA_ID")

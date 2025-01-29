@@ -1,0 +1,48 @@
+{
+  "@type": "https://didcomm.org/out-of-band/1.1/invitation",
+  "@id": "cd07832f-5b8c-4179-a23e-6b60114b87ec",
+  "label": "Orgbook Publisher Service",
+  "imageUrl": "https://github.com/OpSecId/orgbook-publisher/blob/main/assets/icon.png?raw=true",
+  "handshake_protocols": [],
+  "requests~attach": [
+    {
+      "@id": "request-0",
+      "mime-type": "application/json",
+      "data": {
+        "json": {
+          "@type": "https://didcomm.org/present-proof/2.0/request-presentation",
+          "@id": "e3a3cd7c-a270-4d93-bd93-dd2a3e92620e",
+          "~thread": {
+            "pthid": "cd07832f-5b8c-4179-a23e-6b60114b87ec"
+          },
+          "will_confirm": true,
+          "formats": [
+            {
+              "attach_id": "indy",
+              "format": "hlindy/proof-req@v2.0"
+            }
+          ],
+          "request_presentations~attach": [
+            {
+              "@id": "indy",
+              "mime-type": "application/json",
+              "data": {
+                "base64": "eyJuYW1lIjogIkF1dGhvcml6ZWQgUHVibGlzaGVyIiwgInZlcnNpb24iOiAiMS4wIiwgIm5vbmNlIjogIjg2NTEzODUxIiwgInJlcXVlc3RlZF9hdHRyaWJ1dGVzIjogeyJyZXF1ZXN0ZWRBdHRyaWJ1dGVzIjogeyJuYW1lcyI6IFsiaWQiLCAiZW1haWwiLCAidGFyZ2V0Il0sICJyZXN0cmljdGlvbnMiOiBbeyJpc3N1ZXJfZGlkIjogIk1vMlQ3NlpLY1F2ZFlOUGRnR2JNRmkiLCAic2NoZW1hX2lkIjogIk1vMlQ3NlpLY1F2ZFlOUGRnR2JNRmk6MjpQdWJsaXNoZXJJc3N1aW5nQXV0aG9yaXphdGlvbjowLjEifV19fSwgInJlcXVlc3RlZF9wcmVkaWNhdGVzIjoge319"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "services": [
+    {
+      "id": "#inline",
+      "type": "did-communication",
+      "recipientKeys": [
+        "did:key:z6MkmqwP7vno9twQR7CXmHCGv7wpkRNFPHoH1NQSGARMto26#z6MkmqwP7vno9twQR7CXmHCGv7wpkRNFPHoH1NQSGARMto26"
+      ],
+      "serviceEndpoint": "https://traction-acapy-dev.apps.silver.devops.gov.bc.ca"
+    }
+  ]
+}
