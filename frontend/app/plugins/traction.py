@@ -116,7 +116,7 @@ class TractionController:
                             'names': attributes,
                             'restrictions':[
                                 {
-                                    'issuer_did': issuer,
+                                    # 'issuer_did': issuer,
                                     'schema_id': schema_id
                                 }
                             ]
