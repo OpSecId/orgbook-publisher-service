@@ -3,6 +3,7 @@ from config import Config
 import requests
 import secrets
 from random import randint
+from app.models.credential_type import CredentialRegistration
 
 
 class PublisherControllerError(Exception):
@@ -63,6 +64,29 @@ class PublisherController:
             f'{self.endpoint}/credentials/issuers',
             headers={'X-API-KEY': self.api_key}
         )
+        try:
+            return r.json()
+        except:
+            raise PublisherControllerError()
+        
+    def register_credential(self, credential_type, version, issuer, subject_paths, core_paths):
+        registration = CredentialRegistration(
+            type=credential_type,
+            version=version,
+            issuer=issuer,
+            corePaths=core_paths,
+            subjectPaths=subject_paths,
+            relatedResources={
+                'context': 'https://www.w3.org/ns/credentials/examples/v2'
+            }
+        ).model_dump()
+        
+        r = requests.post(
+            f'{self.endpoint}/registrations/credentials',
+            headers={'X-API-KEY': self.api_key},
+            json=registration
+        )
+        print(r.text)
         try:
             return r.json()
         except:

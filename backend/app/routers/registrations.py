@@ -60,7 +60,7 @@ async def register_issuer(request_body: IssuerRegistration):
     return JSONResponse(status_code=201, content=did_document)
 
 @router.get("/credentials", tags=["Admin"], dependencies=[Depends(check_api_key_header)])
-async def list_credential_registrations(type: str, version: str, issuer: str):
+async def list_credential_registrations(type: str = None, version: str = None, issuer: str = None):
     mongo = MongoClient()
     query = {}
     if type:

@@ -18,7 +18,7 @@ class Settings(BaseSettings):
     LOGGER: Logger = logging.getLogger(__name__)
     logging.basicConfig(level=LOG_LEVEL, format=LOG_FORMAT)
 
-    # DOMAIN: str = os.getenv("DOMAIN")
+    DOMAIN: str = os.getenv("DOMAIN")
 
     TRACTION_API_URL: str = os.getenv("TRACTION_API_URL")
     TRACTION_API_KEY: str = os.getenv("TRACTION_API_KEY")
@@ -34,9 +34,9 @@ class Settings(BaseSettings):
     ISSUER_REGISTRY_URL: str = os.getenv("ISSUER_REGISTRY_URL")
     WITNESS_KEY: str = os.getenv("WITNESS_KEY")
 
-    # SECRET_KEY: str = TRACTION_API_KEY
-    # JWT_SECRET: str = TRACTION_API_KEY
-    # JWT_ALGORITHM: str = "HS256"
+    SECRET_KEY: str = TRACTION_API_KEY
+    JWT_SECRET: str = TRACTION_API_KEY
+    JWT_ALGORITHM: str = "HS256"
 
     # MONGO_HOST: str = os.getenv("MONGO_HOST", 'mongo')
     # MONGO_PORT: str = os.getenv("MONGO_PORT", '8080')

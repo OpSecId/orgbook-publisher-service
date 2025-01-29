@@ -10,6 +10,7 @@ from flask import (
 from config import Config
 from app.plugins.publisher import PublisherController
 from app.plugins.traction import TractionController
+from app.models.credential_type import CredentialRegistration
 from .forms import (
     IssuerLoginForm, 
     RegisterCredentialForm, 
@@ -30,6 +31,11 @@ ALLOWED_EXTENSIONS = {'csv'}
 #     if not session.get('pres_req'):
 #         session['pres_req'] = {}
 
+def sanitize_csv_data_entries(data_entries):
+    for entry_idx, entry_data in enumerate(data_entries):
+        data_entries[entry_idx] = [item.strip() for item in entry_data.split(',')]
+    return data_entries
+
 def update_json_with_pointers(credential, pointers):
     for pointer, value in pointers.items():
         keys = pointer.strip("/").split("/")
@@ -47,6 +53,12 @@ def get_default_pointers(attributes):
     pointers = {}
     for attribute in attributes:
         pointers[attribute] = f'/credentialSubject/{attribute}'
+    return pointers
+
+def get_default_paths(attributes):
+    pointers = {}
+    for attribute in attributes:
+        pointers[attribute] = f'$.credentialSubject.{attribute}'
     return pointers
 
 def create_presentation_request():
@@ -97,7 +109,7 @@ def index():
     
     session['email'] = '@gov.bc.ca'
     session['issuer'] = {
-        'id': '',
+        'id': 'did:web:example.com',
         'name': 'Chief Permitting Officer'
     }
     
@@ -112,20 +124,35 @@ def index():
     if request.method == "POST":
         # if form_credential_registration.validate():
         if form_credential_registration.submit_register.data:
+            publisher = PublisherController()
+            
+            credential_name = form_credential_registration.credential_name.data
+            credential_type = ''.join(credential_name.title().split())
+            version = '1.0'
+            
             csv_file = form_credential_registration.csv_file_register.data
             csv_data = csv_file.read().decode("utf-8").split('\n')
+                
             
             header_row = [item.strip() for item in csv_data[0].split(',')]
-            pointers_overlay = {
-                'type': 'vc/spec/pointers/1.0',
-                'attributes_pointers': get_default_pointers(header_row)
-            }
-            branding_overlay = {
-                'type': 'vc/spec/pointers/1.0',
-                'attributes_pointers': get_default_pointers(header_row)
-            }
+            document_id = form_credential_registration.source_id.data
+            registration_id = form_credential_registration.registration_id.data
+            if document_id not in header_row or registration_id not in header_row:
+                return redirect(url_for('issuer.index'))
             
-            
+            subject_paths = get_default_paths(header_row)
+            core_paths = {
+                'entityId': subject_paths[registration_id],
+                'cardinalityId': subject_paths[document_id]
+            }
+            registration = publisher.register_credential(
+                credential_type,
+                version,
+                session['issuer']['id'],
+                subject_paths,
+                core_paths
+            )
+            print(registration)
             
             return redirect(url_for('issuer.index'))
     
@@ -136,7 +163,7 @@ def index():
             header_row = [item.strip() for item in csv_data[0].split(',')]
             pointers = get_default_pointers(header_row)
                 
-            data_entries = csv_data[1:]
+            data_entries = sanitize_csv_data_entries(csv_data[1:])
             claims = {}
             for entry_idx, entry_data in enumerate(data_entries):
                 credential = {
@@ -147,10 +174,9 @@ def index():
                     'type': ['VerifiableCredential'],
                     'issuer': session['issuer']
                 }
-                
-                data_entries[entry_idx] = [item.strip() for item in entry_data.split(',')]
                 for attribute_idx, attribute in enumerate(data_entries[entry_idx]):
                     claims[pointers[header_row[attribute_idx]]] = attribute
+                    
                 update_json_with_pointers(credential, claims)
                 
                 

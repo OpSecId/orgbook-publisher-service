@@ -17,28 +17,15 @@ class RegisterCredentialForm(FlaskForm):
     csv_file_register = FileField(
         "CSV File", validators=[]
     )
-    # description = StringField(
-    #     "Description", [InputRequired()]
-    # )
-    # credential_name = StringField(
-    #     "Credential Name", [InputRequired()]
-    # )
-    # credential_type = StringField(
-    #     "Credential Type", [InputRequired()]
-    # )
-    # source_id = StringField(
-    #     "Document Id Attribute", [InputRequired()]
-    # )
-    # registration_id = StringField(
-    #     "Registration Id Attribute", [InputRequired()]
-    # )
-    # # Advanced
-    # context = StringField(
-    #     "Context URI", []
-    # )
-    # oca_bundle = StringField(
-    #     "OCA Bundle URI", []
-    # )
+    credential_name = StringField(
+        "Credential Name", [InputRequired()]
+    )
+    source_id = StringField(
+        "Document Id Attribute", [InputRequired()]
+    )
+    registration_id = StringField(
+        "Registration Id Attribute", [InputRequired()]
+    )
     submit_register = SubmitField("Register")
 
 class IssuerCredentialForm(FlaskForm):
