@@ -70,7 +70,7 @@ def create_presentation_request():
     traction.set_headers(session['access_token'])
     pres_ex_id, pres_req_ex = traction.request_presentation(
         name='Authorized Publisher',
-        schema_id=Config.AUTH_CRED_DEF_ID,
+        cred_def_id=Config.AUTH_CRED_DEF_ID,
         attributes=['issuer', 'email', 'target']
     )
     oob_id = pres_req_ex.get('oob_id')
