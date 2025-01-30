@@ -38,7 +38,7 @@ def create_credential_offer(email):
         email,
         Config.AUTH_CRED_DEF_ID,
         {
-            'id': request.form.get('issuer'),
+            'issuer': request.form.get('issuer'),
             'role': 'issuer',
             'email': email,
             'target': Config.PUBLISHER_API_URL,

@@ -93,15 +93,15 @@ class TractionController:
         except:
             raise TractionControllerError('No exchange')
     
-    def request_presentation(self, name, issuer, schema_id, attributes):
-        pres_req = self.create_pres_req(name, issuer, schema_id, attributes)
+    def request_presentation(self, name, cred_def_id, attributes):
+        pres_req = self.create_pres_req(name, cred_def_id, attributes)
         invitation = self.create_oob_inv(
             pres_ex_id=pres_req['pres_ex_id'], 
             handshake=False
         )
         return pres_req['pres_ex_id'], invitation
         
-    def create_pres_req(self, name, issuer, schema_id, attributes):
+    def create_pres_req(self, name, cred_def_id, attributes):
         endpoint = f'{self.endpoint}/present-proof-2.0/create-request'
         pres_req = {
             'auto_remove': False,
@@ -116,8 +116,7 @@ class TractionController:
                             'names': attributes,
                             'restrictions':[
                                 {
-                                    # 'issuer_did': issuer,
-                                    'schema_id': schema_id
+                                    'cred_def_id': cred_def_id
                                 }
                             ]
                         }

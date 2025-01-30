@@ -70,9 +70,8 @@ def create_presentation_request():
     traction.set_headers(session['access_token'])
     pres_ex_id, pres_req_ex = traction.request_presentation(
         name='Authorized Publisher',
-        issuer=Config.AUTH_CRED_DEF_ID.split(':')[0],
-        schema_id=Config.AUTH_SCHEMA_ID,
-        attributes=['id', 'email', 'target']
+        schema_id=Config.AUTH_CRED_DEF_ID,
+        attributes=['issuer', 'email', 'target']
     )
     oob_id = pres_req_ex.get('oob_id')
     with open(f'app/static/invitations/{pres_ex_id}.json', 'w+') as f:
