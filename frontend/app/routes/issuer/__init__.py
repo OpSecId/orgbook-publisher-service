@@ -227,7 +227,7 @@ def manage_credential_type(credential_type: str):
 def logout():
     session.clear()
     session['issuer'] = None
-    return redirect(url_for('main.index'))
+    return redirect(url_for('issuer.login'))
 
 
 @bp.route("/login", methods=["GET", "POST"])
