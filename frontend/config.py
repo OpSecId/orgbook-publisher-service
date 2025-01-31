@@ -28,7 +28,7 @@ class Config(object):
     
     RESTRICTED_EMAIL = "gov.bc.ca"
     AUTH_CRED_DEF_ID = os.getenv("AUTH_CRED_DEF_ID")
-    AUTH_SCHEMA_ID = os.getenv("AUTH_SCHEMA_ID")
+    # AUTH_SCHEMA_ID = os.getenv("AUTH_SCHEMA_ID")
     
     UPLOAD_FOLDER = 'uploads'
     MAX_CONTENT_LENGTH = 16 * 1024 * 1024

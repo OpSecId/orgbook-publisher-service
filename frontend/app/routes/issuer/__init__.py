@@ -106,10 +106,9 @@ def index():
     if not session.get('issuer_id'):
         return redirect(url_for("issuer.logout"))
     
-    session['email'] = '@gov.bc.ca'
     session['issuer'] = {
         'id': 'did:web:traceability.site:test:11',
-        'name': 'Chief Permitting Officer'
+        'name': session['issuer']
     }
     
     form_credential_registration = RegisterCredentialForm()
@@ -258,10 +257,10 @@ def login():
         traction = TractionController()
         traction.set_headers(session['access_token'])
         verification = traction.verify_presentation(session['pres_ex_id'])
-        print(verification)
         if verification.get('verified'):
-            pass
-        session['issuer_id'] = 'did:web:example.com:mines-act:chief-permitting-officer'
+            values = verification['by_format']['pres']['indy']['requested_proof']['revealed_attr_groups']['Authorized Publisher']['values']
+            session['issuer_id'] = values['issuer']['raw']
+            session['email'] = values['email']['raw']
         return redirect(url_for('issuer.index'))
         
     return render_template(
