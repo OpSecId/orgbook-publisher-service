@@ -108,7 +108,7 @@ def index():
     
     session['issuer'] = {
         'id': 'did:web:traceability.site:test:11',
-        'name': session['issuer']
+        'name': session['issuer_id']
     }
     
     form_credential_registration = RegisterCredentialForm()
@@ -244,7 +244,7 @@ def manage_credential_type(credential_type: str):
 def logout():
     session.clear()
     session['issuer_id'] = None
-    return redirect(url_for('issuer.login'))
+    return redirect(url_for('main.index'))
 
 
 @bp.route("/login", methods=["GET", "POST"])
@@ -258,10 +258,13 @@ def login():
         traction.set_headers(session['access_token'])
         verification = traction.verify_presentation(session['pres_ex_id'])
         if verification.get('verified'):
-            values = verification['by_format']['pres']['indy']['requested_proof']['revealed_attr_groups']['Authorized Publisher']['values']
-            session['issuer_id'] = values['issuer']['raw']
-            session['email'] = values['email']['raw']
-        return redirect(url_for('issuer.index'))
+            values = verification['by_format']['pres']['indy']['requested_proof']['revealed_attr_groups']['requestedAttributes']['values']
+            if values['target']['raw'] == Config.PUBLISHER_API_URL:
+                session['issuer_id'] = values['issuer']['raw']
+                session['email'] = values['email']['raw']
+                return redirect(url_for('issuer.index'))
+
+        return redirect(url_for('issuer.logout'))
         
     return render_template(
         'pages/issuer/login.jinja',
