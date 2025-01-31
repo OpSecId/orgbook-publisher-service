@@ -58,20 +58,18 @@ class PublisherController:
                 'description': description
             }
         )
-        print(r.text)
         try:
             return r.json()
         except:
             raise PublisherControllerError()
         
     def get_credential_types(self, issuer):
-        # r = requests.get(
-        #     f'{self.endpoint}/registrations/credentials?issuer={issuer}',
-        #     headers={'X-API-KEY': self.api_key}
-        # )
+        r = requests.get(
+            f'{self.endpoint}/registrations/credentials?issuer={issuer}',
+            headers={'X-API-KEY': self.api_key}
+        )
         try:
-            return []
-            # return r.json()
+            return r.json()
         except:
             raise PublisherControllerError()
         
@@ -104,7 +102,6 @@ class PublisherController:
             headers={'X-API-KEY': self.api_key},
             json=registration
         )
-        print(r.text)
         try:
             return r.json()
         except:

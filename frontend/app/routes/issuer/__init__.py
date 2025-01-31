@@ -132,7 +132,6 @@ def index():
                 subject_paths,
                 core_paths
             )
-            print(registration)
             
             return redirect(url_for('issuer.index'))
     
