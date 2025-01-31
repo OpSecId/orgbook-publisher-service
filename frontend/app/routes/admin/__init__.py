@@ -53,26 +53,7 @@ def create_credential_offer(email):
 def get_issuers():
     publisher = PublisherController()
     issuers = publisher.get_issuers()
-    # issuers += [{
-    #     'id': 'did:web:example.com:mines-act:chief-permitting-officer',
-    #     'name': 'Chief Permitting Officer'
-    # },{
-    #     'id': 'did:web:example.com:petroleum-and-natural-gas-act:director-of-petroleum-lands',
-    #     'name': 'Director of Petroleum Lands'
-    # }]
-    
-    registry = publisher.get_registry()
-    # registry += [{
-    #     'id': 'did:web:example.com:mines-act:chief-permitting-officer',
-    #     'name': 'Chief Permitting Officer'
-    # }]
-
-    for issuer in issuers:
-        issuer['active'] = True if issuer['id'] in [
-            entry['id'] for entry in registry
-        ] else False
-
-    return issuers
+    return PublisherController().get_issuers()
 
 
 
@@ -80,8 +61,8 @@ def get_issuers():
 def index():
     if not session.get('tenant_id'):
         return redirect(url_for("admin.logout"))
-
-    issuers = get_issuers()
+    publisher = PublisherController()
+    issuers = publisher.get_issuers()
     
     form_issuer_registration = RegisterIssuerForm()
     form_credential_offer = OfferAuthCredentialForm()
@@ -89,7 +70,6 @@ def index():
         (issuer['id'], issuer['name']) for issuer in issuers if issuer['active']
     ]
     if request.method == "POST" and form_issuer_registration.submit_register.data:
-        publisher = PublisherController()
         issuer_registration = publisher.register_issuer(
             request.form.get('scope'),
             request.form.get('name'),

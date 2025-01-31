@@ -22,13 +22,18 @@ class PublisherController:
         }
         
     def get_issuers(self):
+        registry = self.get_registry()
         r = requests.get(
             f'{self.endpoint}/registrations/issuers',
             headers={'X-API-KEY': self.api_key}
         )
-        print(r.text)
         try:
-            return r.json()
+            issuers = r.json()
+            for issuer in issuers:
+                issuer['active'] = True if issuer['id'] in [
+                    entry['id'] for entry in registry
+                ] else False
+            return issuers
         except:
             raise PublisherControllerError()
         
@@ -56,6 +61,17 @@ class PublisherController:
         print(r.text)
         try:
             return r.json()
+        except:
+            raise PublisherControllerError()
+        
+    def get_credential_types(self, issuer):
+        # r = requests.get(
+        #     f'{self.endpoint}/registrations/credentials?issuer={issuer}',
+        #     headers={'X-API-KEY': self.api_key}
+        # )
+        try:
+            return []
+            # return r.json()
         except:
             raise PublisherControllerError()
         

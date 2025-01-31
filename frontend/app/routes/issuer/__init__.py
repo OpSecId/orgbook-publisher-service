@@ -80,20 +80,6 @@ def create_presentation_request():
     session['pres_ex_id'] = pres_ex_id
 
 
-def get_credential_types():
-    credential_types = []
-    credential_types += [
-        {
-            'type': 'MinesActPermit',
-            'extendedType': 'DigitalConformityCredential',
-            'context': 'https://',
-            'version': '1.0',
-            'count': 73
-        }
-    ]
-    return credential_types
-
-
 def get_credentials(credential_type):
     publisher = PublisherController()
     credentials = publisher.get_credentials()
@@ -103,18 +89,14 @@ def get_credentials(credential_type):
 
 @bp.route("/", methods=["GET", "POST"])
 def index():
-    if not session.get('issuer_id'):
+    if not session.get('issuer'):
         return redirect(url_for("issuer.logout"))
-    
-    session['issuer'] = {
-        'id': 'did:web:traceability.site:test:11',
-        'name': session['issuer_id']
-    }
     
     form_credential_registration = RegisterCredentialForm()
     form_credential_issuance = IssuerCredentialForm()
     
-    credential_types = get_credential_types()
+    publisher = PublisherController()
+    credential_types = publisher.get_credential_types(session['issuer']['id'])
     
     form_credential_issuance.credential_type.choices = [("", "")] + [
         (entry['type'], entry['type']) for entry in credential_types
@@ -191,10 +173,11 @@ def index():
 
 @bp.route("/credential-types/<credential_type>", methods=["GET", "POST"])
 def manage_credential_type(credential_type: str):
-    if not session.get('issuer_id'):
+    if not session.get('issuer'):
         return redirect(url_for("issuer.logout"))
     
-    credential_types = get_credential_types()
+    publisher = PublisherController()
+    credential_types = publisher.get_credential_types()
     if credential_type not in [credential_type.get('type') for credential_type in credential_types]:
         return redirect(url_for('issuer.index'))
     credentials = [
@@ -243,7 +226,7 @@ def manage_credential_type(credential_type: str):
 @bp.route("/logout", methods=["GET"])
 def logout():
     session.clear()
-    session['issuer_id'] = None
+    session['issuer'] = None
     return redirect(url_for('main.index'))
 
 
@@ -256,15 +239,26 @@ def login():
     if request.method == "POST" and form_login.validate():
         traction = TractionController()
         traction.set_headers(session['access_token'])
+        
         verification = traction.verify_presentation(session['pres_ex_id'])
-        if verification.get('verified'):
-            values = verification['by_format']['pres']['indy']['requested_proof']['revealed_attr_groups']['requestedAttributes']['values']
-            if values['target']['raw'] == Config.PUBLISHER_API_URL:
-                session['issuer_id'] = values['issuer']['raw']
-                session['email'] = values['email']['raw']
-                return redirect(url_for('issuer.index'))
-
-        return redirect(url_for('issuer.logout'))
+        if not verification.get('verified'):
+            return redirect(url_for('issuer.logout'))
+        
+        values = verification['by_format']['pres']['indy']['requested_proof']['revealed_attr_groups']['requestedAttributes']['values']
+        if values['target']['raw'] != Config.PUBLISHER_API_URL:
+            return redirect(url_for('issuer.logout'))
+        
+        publisher = PublisherController()
+        issuers = publisher.get_issuers()
+        
+        issuer = next((issuer for issuer in issuers if (issuer['id'] == values['issuer']['raw'] and issuer['active'])), None)
+        if not issuer:
+            return redirect(url_for('issuer.logout'))
+        
+        session['issuer'] = issuer
+        session['email'] = values['email']['raw']
+        
+        return redirect(url_for('issuer.index'))
         
     return render_template(
         'pages/issuer/login.jinja',
